@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1046</width>
+    <height>851</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>ScottPlayer</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="ScottPlayer.qrc">
+    <normaloff>:/ScottPlayer/ScottPlayer.png</normaloff>:/ScottPlayer/ScottPlayer.png</iconset>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <property name="leftMargin">
+     <number>11</number>
+    </property>
+    <item>
+     <layout class="QGridLayout" name="gridLayout">
+      <property name="verticalSpacing">
+       <number>3</number>
+      </property>
+      <item row="0" column="1">
+       <widget class="QLineEdit" name="leProject">
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string>Cape:</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <widget class="QTabWidget" name="tabWidget">
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <widget class="QWidget" name="tabStringPorts">
+       <attribute name="title">
+        <string>String Ports</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_3">
+        <item>
+         <widget class="QComboBox" name="comboBoxCape"/>
+        </item>
+        <item>
+         <widget class="QTableWidget" name="twParts">
+          <property name="columnCount">
+           <number>2</number>
+          </property>
+          <attribute name="verticalHeaderMinimumSectionSize">
+           <number>25</number>
+          </attribute>
+          <attribute name="verticalHeaderDefaultSectionSize">
+           <number>30</number>
+          </attribute>
+          <column>
+           <property name="text">
+            <string>String Ports</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>GPIO</string>
+           </property>
+          </column>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tabSerial">
+       <attribute name="title">
+        <string>Other Ports</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout_2">
+        <item row="0" column="0">
+         <widget class="QTableWidget" name="twOther">
+          <column>
+           <property name="text">
+            <string>Type</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Device</string>
+           </property>
+          </column>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tabGPIO">
+       <attribute name="title">
+        <string>GPIO Inputs</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout_3">
+        <item row="0" column="0">
+         <widget class="QTableWidget" name="twGPIO">
+          <column>
+           <property name="text">
+            <string>Pin</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Mode</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Description</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Type</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Command</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Args</string>
+           </property>
+          </column>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tabCapeInfo">
+       <attribute name="title">
+        <string>Cape Info</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_4">
+        <item>
+         <widget class="QTextEdit" name="textEditCapeInfo"/>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1046</width>
+     <height>26</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <widget class="QMenu" name="menuRecent">
+     <property name="title">
+      <string>Recent</string>
+     </property>
+     <addaction name="actionClear"/>
+    </widget>
+    <addaction name="actionOpen_EEPROM"/>
+    <addaction name="actionDownload_EEPROM"/>
+    <addaction name="menuRecent"/>
+    <addaction name="separator"/>
+    <addaction name="actionClose"/>
+   </widget>
+   <widget class="QMenu" name="menuAbout">
+    <property name="title">
+     <string>About</string>
+    </property>
+    <addaction name="actionAbout"/>
+    <addaction name="actionOpen_Logs"/>
+   </widget>
+   <addaction name="menuFile"/>
+   <addaction name="menuAbout"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionClose">
+   <property name="icon">
+    <iconset resource="ScottPlayer.qrc">
+     <normaloff>:/ScottPlayer/icons/cancel.png</normaloff>:/ScottPlayer/icons/cancel.png</iconset>
+   </property>
+   <property name="text">
+    <string>Close</string>
+   </property>
+  </action>
+  <action name="actionOpen_Logs">
+   <property name="icon">
+    <iconset resource="ScottPlayer.qrc">
+     <normaloff>:/ScottPlayer/icons/book_open.png</normaloff>:/ScottPlayer/icons/book_open.png</iconset>
+   </property>
+   <property name="text">
+    <string>Open Logs...</string>
+   </property>
+  </action>
+  <action name="actionOpen_EEPROM">
+   <property name="icon">
+    <iconset resource="ScottPlayer.qrc">
+     <normaloff>:/ScottPlayer/icons/folder.png</normaloff>:/ScottPlayer/icons/folder.png</iconset>
+   </property>
+   <property name="text">
+    <string>Open EEPROM...</string>
+   </property>
+  </action>
+  <action name="actionOpen_Explorer">
+   <property name="text">
+    <string>Open Explorer</string>
+   </property>
+  </action>
+  <action name="actionImport_PartList">
+   <property name="text">
+    <string>PartList CSV...</string>
+   </property>
+  </action>
+  <action name="actionImport_Rename_Map">
+   <property name="text">
+    <string>Rename CSV...</string>
+   </property>
+  </action>
+  <action name="actionReload_Project">
+   <property name="icon">
+    <iconset resource="ScottPlayer.qrc">
+     <normaloff>:/ScottPlayer/icons/arrow_refresh_small.png</normaloff>:/ScottPlayer/icons/arrow_refresh_small.png</iconset>
+   </property>
+   <property name="text">
+    <string>Reload Project</string>
+   </property>
+  </action>
+  <action name="actionAbout">
+   <property name="icon">
+    <iconset resource="ScottPlayer.qrc">
+     <normaloff>:/ScottPlayer/ScottPlayer.png</normaloff>:/ScottPlayer/ScottPlayer.png</iconset>
+   </property>
+   <property name="text">
+    <string>About...</string>
+   </property>
+  </action>
+  <action name="actionImport_Parts_from_Schematic">
+   <property name="icon">
+    <iconset resource="ScottPlayer.qrc">
+     <normaloff>:/ScottPlayer/icons/report_add.png</normaloff>:/ScottPlayer/icons/report_add.png</iconset>
+   </property>
+   <property name="text">
+    <string>PartList from Schematic...</string>
+   </property>
+  </action>
+  <action name="actionExport_PartList_CSV">
+   <property name="text">
+    <string>PartList CSV...</string>
+   </property>
+  </action>
+  <action name="actionExport_Rename_CSV">
+   <property name="text">
+    <string>Rename CSV...</string>
+   </property>
+  </action>
+  <action name="actionOverride">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Override Existing Parts</string>
+   </property>
+  </action>
+  <action name="actionSet_Library_Folder">
+   <property name="icon">
+    <iconset resource="ScottPlayer.qrc">
+     <normaloff>:/ScottPlayer/icons/folder_table.png</normaloff>:/ScottPlayer/icons/folder_table.png</iconset>
+   </property>
+   <property name="text">
+    <string>Set Library Folder</string>
+   </property>
+  </action>
+  <action name="actionLibrary_Report">
+   <property name="icon">
+    <iconset resource="ScottPlayer.qrc">
+     <normaloff>:/ScottPlayer/icons/report_go.png</normaloff>:/ScottPlayer/icons/report_go.png</iconset>
+   </property>
+   <property name="text">
+    <string>Library Report...</string>
+   </property>
+  </action>
+  <action name="actionBOM_CSV">
+   <property name="icon">
+    <iconset resource="ScottPlayer.qrc">
+     <normaloff>:/ScottPlayer/icons/table.png</normaloff>:/ScottPlayer/icons/table.png</iconset>
+   </property>
+   <property name="text">
+    <string>BOM CSV...</string>
+   </property>
+  </action>
+  <action name="actionClear">
+   <property name="icon">
+    <iconset resource="ScottPlayer.qrc">
+     <normaloff>:/ScottPlayer/icons/cross.png</normaloff>:/ScottPlayer/icons/cross.png</iconset>
+   </property>
+   <property name="text">
+    <string>Clear</string>
+   </property>
+  </action>
+  <action name="actionDownload_EEPROM">
+   <property name="text">
+    <string>Download EEPROM...</string>
+   </property>
+  </action>
+ </widget>
+ <resources>
+  <include location="ScottPlayer.qrc"/>
+ </resources>
+ <connections/>
+</ui>
