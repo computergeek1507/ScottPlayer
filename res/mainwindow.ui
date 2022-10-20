@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>ScottPlayer</string>
+   <string>Scott Player</string>
   </property>
   <property name="windowIcon">
    <iconset resource="ScottPlayer.qrc">
@@ -25,15 +25,15 @@
     <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>0</number>
+       <number>2</number>
       </property>
-      <widget class="QWidget" name="tabStringPorts">
+      <widget class="QWidget" name="tabSchedules">
        <attribute name="title">
-        <string>String Ports</string>
+        <string>Schedules</string>
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_3">
         <item>
-         <widget class="QTableWidget" name="twParts">
+         <widget class="QTableWidget" name="twSchedules">
           <property name="columnCount">
            <number>2</number>
           </property>
@@ -45,61 +45,46 @@
           </attribute>
           <column>
            <property name="text">
-            <string>String Ports</string>
+            <string>Name</string>
            </property>
           </column>
           <column>
            <property name="text">
-            <string>GPIO</string>
+            <string>Time</string>
            </property>
           </column>
          </widget>
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="tabSerial">
+      <widget class="QWidget" name="tabPlaylists">
        <attribute name="title">
-        <string>Other Ports</string>
+        <string>Playlists</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout_2">
         <item row="0" column="0">
-         <widget class="QTableWidget" name="twOther">
+         <widget class="QTableWidget" name="twPlaylists">
           <column>
            <property name="text">
-            <string>Type</string>
+            <string>Name</string>
            </property>
           </column>
           <column>
            <property name="text">
-            <string>Device</string>
+            <string>Songs</string>
            </property>
           </column>
          </widget>
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="tabGPIO">
+      <widget class="QWidget" name="tabControllers">
        <attribute name="title">
-        <string>GPIO Inputs</string>
+        <string>Controllers</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout_3">
         <item row="0" column="0">
-         <widget class="QTableWidget" name="twGPIO">
-          <column>
-           <property name="text">
-            <string>Pin</string>
-           </property>
-          </column>
-          <column>
-           <property name="text">
-            <string>Mode</string>
-           </property>
-          </column>
-          <column>
-           <property name="text">
-            <string>Description</string>
-           </property>
-          </column>
+         <widget class="QTableWidget" name="twControllers">
           <column>
            <property name="text">
             <string>Type</string>
@@ -107,25 +92,15 @@
           </column>
           <column>
            <property name="text">
-            <string>Command</string>
+            <string>IP</string>
            </property>
           </column>
           <column>
            <property name="text">
-            <string>Args</string>
+            <string>Channels</string>
            </property>
           </column>
          </widget>
-        </item>
-       </layout>
-      </widget>
-      <widget class="QWidget" name="tabCapeInfo">
-       <attribute name="title">
-        <string>Cape Info</string>
-       </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout_4">
-        <item>
-         <widget class="QTextEdit" name="textEditCapeInfo"/>
         </item>
        </layout>
       </widget>

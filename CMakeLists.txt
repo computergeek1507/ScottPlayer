@@ -7,6 +7,8 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 # Set path to our custom CMAKE scripts
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${PROJECT_SOURCE_DIR}/cmake")
 
+add_compile_definitions(NO_ZLIB)
+
 # Include Qt deployment helper function
 include(windeployqt)
 
@@ -24,6 +26,18 @@ if (NOT spdlog_POPULATED)
     add_subdirectory(${spdlog_SOURCE_DIR} ${spdlog_BINARY_DIR})
 endif()
 
+FetchContent_Declare(
+        zstd
+        GIT_REPOSITORY https://github.com/facebook/zstd.git
+        GIT_TAG        v1.5.2
+)
+
+FetchContent_GetProperties(zstd)
+if (NOT zstd_POPULATED)
+    FetchContent_Populate(zstd)
+    add_subdirectory(${zstd_SOURCE_DIR}/build/cmake ${zstd_BINARY_DIR} EXCLUDE_FROM_ALL)
+endif()
+
 #set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
@@ -31,8 +45,8 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets Network)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets Network)
+find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets Network Xml)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets Network Xml)
 
 configure_file(src/config.h.in ${CMAKE_CURRENT_SOURCE_DIR}/src/config.h)
 configure_file(res/installer/ScottPlayer.iss.in ${CMAKE_CURRENT_SOURCE_DIR}/res/installer/ScottPlayer.iss)
@@ -75,7 +89,7 @@ else()
     endif()
 endif()
 
-target_link_libraries(${PROJECT_NAME} PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Network spdlog::spdlog)
+target_link_libraries(${PROJECT_NAME} PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Network Qt${QT_VERSION_MAJOR}::Xml spdlog::spdlog libzstd_shared)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com
@@ -91,7 +105,7 @@ if(WIN32)
   set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ${PROJECT_NAME})
 endif()
 
-source_group(src FILES ${BASE_SRC})
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${BASE_SRC})
 source_group(res FILES ${BASE_RES})
 
 if(QT_VERSION_MAJOR EQUAL 6)

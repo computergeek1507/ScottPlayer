@@ -31,31 +31,31 @@
 
 #include <filesystem>
 
-MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent)
-    , ui(new Ui::MainWindow)
+MainWindow::MainWindow(QWidget* parent)
+	: QMainWindow(parent)
+	, m_ui(new Ui::MainWindow)
 {
 	QCoreApplication::setApplicationName(PROJECT_NAME);
-    QCoreApplication::setApplicationVersion(PROJECT_VER);
-    ui->setupUi(this);
+	QCoreApplication::setApplicationVersion(PROJECT_VER);
+	m_ui->setupUi(this);
 
 	auto const log_name{ "log.txt" };
 
-	appdir = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
-	std::filesystem::create_directory(appdir.toStdString());
-	QString logdir = appdir + "/log/";
+	m_appdir = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+	std::filesystem::create_directory(m_appdir.toStdString());
+	QString logdir = m_appdir + "/log/";
 	std::filesystem::create_directory(logdir.toStdString());
 
 	try
 	{
 		auto file{ std::string(logdir.toStdString() + log_name) };
-		auto rotating = std::make_shared<spdlog::sinks::rotating_file_sink_mt>( file, 1024 * 1024, 5, false);
+		auto rotating = std::make_shared<spdlog::sinks::rotating_file_sink_mt>(file, 1024 * 1024, 5, false);
 
-		logger = std::make_shared<spdlog::logger>("scottplayer", rotating);
-		logger->flush_on(spdlog::level::debug);
-		logger->set_level(spdlog::level::debug);
-		logger->set_pattern("[%D %H:%M:%S] [%L] %v");
-		spdlog::register_logger(logger);
+		m_logger = std::make_shared<spdlog::logger>("scottplayer", rotating);
+		m_logger->flush_on(spdlog::level::debug);
+		m_logger->set_level(spdlog::level::debug);
+		m_logger->set_pattern("[%D %H:%M:%S] [%L] %v");
+		spdlog::register_logger(m_logger);
 	}
 	catch (std::exception& /*ex*/)
 	{
@@ -64,13 +64,42 @@ MainWindow::MainWindow(QWidget *parent)
 
 	setWindowTitle(windowTitle() + " v" + PROJECT_VER);
 
-	settings = std::make_unique< QSettings>(appdir + "/settings.ini", QSettings::IniFormat);
+	m_settings = std::make_unique< QSettings>(m_appdir + "/settings.ini", QSettings::IniFormat);
 
+	m_player = std::make_unique<SequencePlayer>();
+	connect(m_player.get(), &SequencePlayer::AddController, this, &MainWindow::on_AddController);
+
+
+	auto lastfolder{ m_settings->value("last_folder").toString() };
+
+	if (QDir(lastfolder).exists())
+	{
+		m_player->LoadConfigs(lastfolder);
+		m_showfolder = lastfolder;
+	}
 }
 
 MainWindow::~MainWindow()
 {
-    delete ui;
+	delete m_ui;
+}
+
+void MainWindow::on_actionSet_Show_Folder_triggered()
+{
+	QFileDialog dialog;
+	dialog.setFileMode(QFileDialog::Directory);
+	dialog.setOption(QFileDialog::ShowDirsOnly);
+	auto lastfolder{ m_settings->value("last_folder",QStandardPaths::writableLocation(QStandardPaths::DesktopLocation)).toString() };
+
+	QString const folder = dialog.getExistingDirectory(this, "Select xLight Show Folder", lastfolder, QFileDialog::ShowDirsOnly);
+	if (!folder.isEmpty() && QDir(folder).exists())
+	{
+		ClearListData();
+		m_showfolder = folder;
+		m_player->LoadConfigs(folder);
+		m_settings->setValue("last_folder", folder);
+		m_settings->sync();
+	}
 }
 
 void MainWindow::on_actionClose_triggered()
@@ -83,16 +112,41 @@ void MainWindow::on_actionAbout_triggered()
 	QString text = QString("Scott Player v%1<br>QT v%2<br><br>Icons by:")
 		.arg(PROJECT_VER, QT_VERSION_STR) +
 		QStringLiteral("<br><a href='http://www.famfamfam.com/lab/icons/silk/'>www.famfamfam.com</a>");
-		//http://www.famfamfam.com/lab/icons/silk/
-	QMessageBox::about( this, "About Scott Player", text );
+	//http://www.famfamfam.com/lab/icons/silk/
+	QMessageBox::about(this, "About Scott Player", text);
 }
 
 void MainWindow::on_actionOpen_Logs_triggered()
 {
-	QDesktopServices::openUrl(QUrl::fromLocalFile(appdir + "/log/"));
+	QDesktopServices::openUrl(QUrl::fromLocalFile(m_appdir + "/log/"));
+}
+
+void MainWindow::on_AddController(QString const& type, QString const& ip, QString const& channel)
+{
+	auto SetItem = [&](int row, int col, QString const& text)
+	{
+		m_ui->twControllers->setItem(row, col, new QTableWidgetItem());
+		m_ui->twControllers->item(row, col)->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
+		m_ui->twControllers->item(row, col)->setText(text);
+	};
+
+	int row = m_ui->twControllers->rowCount();
+	m_ui->twControllers->insertRow(row);
+	SetItem(row, 0, type);
+	SetItem(row, 1, ip);
+	SetItem(row, 2, channel);
+	m_ui->twControllers->resizeColumnsToContents();
+}
+
+void MainWindow::ClearListData()
+{
+	while (m_ui->twControllers->rowCount() != 0)
+	{
+		m_ui->twControllers->removeRow(0);
+	}
 }
 
 void MainWindow::LogMessage(QString const& message, spdlog::level::level_enum llvl)
 {
-	logger->log(llvl, message.toStdString());
+	m_logger->log(llvl, message.toStdString());
 }

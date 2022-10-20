@@ -1,10 +1,12 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QMainWindow>
+#include "./players/SequencePlayer.h"
 
 #include "spdlog/spdlog.h"
 #include "spdlog/common.h"
+
+#include <QMainWindow>
 
 #include <memory>
 #include <filesystem>
@@ -28,19 +30,24 @@ public:
 
 public Q_SLOTS:
 
+    void on_actionSet_Show_Folder_triggered();
     void on_actionClose_triggered();
 
     void on_actionAbout_triggered();
     void on_actionOpen_Logs_triggered();
+    
+    void on_AddController(QString const&,QString const&,QString const&);
 
+    void ClearListData();
     void LogMessage(QString const& message , spdlog::level::level_enum llvl = spdlog::level::level_enum::debug);
 
 private:
-    Ui::MainWindow *ui;
+    Ui::MainWindow *m_ui;
 
-    std::shared_ptr<spdlog::logger> logger{ nullptr };
-    std::unique_ptr<QSettings> settings{ nullptr };
-    QString appdir;
-
+    std::shared_ptr<spdlog::logger> m_logger{ nullptr };
+    std::unique_ptr<QSettings> m_settings{ nullptr };
+    std::unique_ptr<SequencePlayer> m_player{ nullptr };
+    QString m_appdir;
+    QString m_showfolder;
 };
 #endif // MAINWINDOW_H
