@@ -34,6 +34,8 @@ struct DDPOutput : IPOutput
 	uint8_t _data[DDP_PACKET_LEN];
 	uint8_t _sequenceNum{0};
 
+	//uint8_t* _fulldata;
+
 	bool Open() override;
 	void Close() override;
 	void OutputFrame(uint8_t *data) override;

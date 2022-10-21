@@ -62,7 +62,7 @@ int gettimeofday(struct timeval * tp, struct timezone * tzp)
 #include "spdlog/spdlog.h"
 #include "spdlog/fmt/bundled/printf.h"
 template<typename... Args> static void LogErr(int i, const char *fmt, Args... args) {
-    auto fseq_logger_base = spdlog::get("log_base");
+    auto fseq_logger_base = spdlog::get("scottplayer");
     char buf[256];
     const char *nfmt = fmt;
     if (fmt[strlen(fmt) - 1] == '\n') {
@@ -75,7 +75,7 @@ template<typename... Args> static void LogErr(int i, const char *fmt, Args... ar
     //fseq_logger_base->error(fmt, args...);
 }
 template<typename... Args> static void LogInfo(int i, const char *fmt, Args... args) {
-    auto fseq_logger_base = spdlog::get("log_base");
+    auto fseq_logger_base = spdlog::get("scottplayer");
     char buf[256];
     const char *nfmt = fmt;
     if (fmt[strlen(fmt) - 1] == '\n') {
@@ -86,7 +86,7 @@ template<typename... Args> static void LogInfo(int i, const char *fmt, Args... a
     fseq_logger_base->info(fmt::sprintf(nfmt, args...));
 }
 template<typename... Args> static void LogDebug(int i, const char *fmt, Args... args) {
-    auto fseq_logger_base = spdlog::get("log_base");
+    auto fseq_logger_base = spdlog::get("scottplayer");
     char buf[256];
     const char *nfmt = fmt;
     if (fmt[strlen(fmt) - 1] == '\n') {

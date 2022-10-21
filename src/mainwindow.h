@@ -31,6 +31,7 @@ public:
 public Q_SLOTS:
 
     void on_actionSet_Show_Folder_triggered();
+    void on_actionPlay_Sequence_triggered();
     void on_actionClose_triggered();
 
     void on_actionAbout_triggered();
@@ -39,9 +40,12 @@ public Q_SLOTS:
     void on_AddController(QString const&,QString const&,QString const&);
 
     void ClearListData();
+    void UpdateStatus(QString const& message);
+    void UpdatePlayback(QString const& sequenceName, int elapsedMS, int durationMS);
     void LogMessage(QString const& message , spdlog::level::level_enum llvl = spdlog::level::level_enum::debug);
 
 private:
+    QString FormatTime(int ticksMS) const;
     Ui::MainWindow *m_ui;
 
     std::shared_ptr<spdlog::logger> m_logger{ nullptr };

@@ -68,7 +68,8 @@ MainWindow::MainWindow(QWidget* parent)
 
 	m_player = std::make_unique<SequencePlayer>();
 	connect(m_player.get(), &SequencePlayer::AddController, this, &MainWindow::on_AddController);
-
+	connect(m_player.get(), &SequencePlayer::UpdateStatus, this, &MainWindow::UpdateStatus);
+	connect(m_player.get(), &SequencePlayer::UpdateTime, this, &MainWindow::UpdatePlayback);
 
 	auto lastfolder{ m_settings->value("last_folder").toString() };
 
@@ -98,6 +99,18 @@ void MainWindow::on_actionSet_Show_Folder_triggered()
 		m_showfolder = folder;
 		m_player->LoadConfigs(folder);
 		m_settings->setValue("last_folder", folder);
+		m_settings->sync();
+	}
+}
+
+//mostly for testing
+void MainWindow::on_actionPlay_Sequence_triggered()
+{
+	QString const fseqFile = QFileDialog::getOpenFileName(this, "Select FSEQ File", m_settings->value("last_fseq").toString(), tr("FSEQ Files (*.fseq);;All Files (*.*)"));
+	if (!fseqFile.isEmpty())
+	{
+		m_player->LoadSequence(fseqFile);
+		m_settings->setValue("last_fseq", fseqFile);
 		m_settings->sync();
 	}
 }
@@ -146,7 +159,23 @@ void MainWindow::ClearListData()
 	}
 }
 
+void MainWindow::UpdateStatus(QString const& message)
+{
+	m_ui->lb_Status->setText(message);
+}
+
+void MainWindow::UpdatePlayback(QString const& sequenceName, int elapsedMS, int durationMS)
+{
+	m_ui->lb_Status->setText(QString("Playing %1 %2/%3").arg(sequenceName).arg(FormatTime(elapsedMS)).arg(FormatTime(durationMS)));
+}
+
 void MainWindow::LogMessage(QString const& message, spdlog::level::level_enum llvl)
 {
 	m_logger->log(llvl, message.toStdString());
 }
+
+QString MainWindow::FormatTime(int ticksMS) const
+{
+	return QTime::fromMSecsSinceStartOfDay( ticksMS ).toString("mm:ss");
+}
+

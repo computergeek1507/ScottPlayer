@@ -16,7 +16,7 @@ std::string GetTag()
 
 bool E131Output::Open() 
 { 
-	if (IP.isEmpty()) return false;
+	if (IP.isEmpty() || !Enabled) return false;
 
     memset(_data, 0x00, sizeof(_data));
     _sequenceNum = 0;
@@ -109,6 +109,7 @@ bool E131Output::Open()
 
 void E131Output::OutputFrame(uint8_t* data) 
 {
+    if (!Enabled || m_UdpSocket == nullptr || m_UdpSocket->state() != QAbstractSocket::ConnectedState) return;
     //size_t chs = (std::min)(size, (size_t)(GetMaxChannels() - channel));
 
     size_t chs = PacketSize;
