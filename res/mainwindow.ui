@@ -25,44 +25,14 @@
     <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>2</number>
+       <number>0</number>
       </property>
-      <widget class="QWidget" name="tabSchedules">
-       <attribute name="title">
-        <string>Schedules</string>
-       </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout_3">
-        <item>
-         <widget class="QTableWidget" name="twSchedules">
-          <property name="columnCount">
-           <number>2</number>
-          </property>
-          <attribute name="verticalHeaderDefaultSectionSize">
-           <number>30</number>
-          </attribute>
-          <attribute name="verticalHeaderMinimumSectionSize">
-           <number>25</number>
-          </attribute>
-          <column>
-           <property name="text">
-            <string>Name</string>
-           </property>
-          </column>
-          <column>
-           <property name="text">
-            <string>Time</string>
-           </property>
-          </column>
-         </widget>
-        </item>
-       </layout>
-      </widget>
       <widget class="QWidget" name="tabPlaylists">
        <attribute name="title">
         <string>Playlists</string>
        </attribute>
-       <layout class="QGridLayout" name="gridLayout_2">
-        <item row="0" column="0">
+       <layout class="QVBoxLayout" name="verticalLayout_2">
+        <item>
          <widget class="QTableWidget" name="twPlaylists">
           <column>
            <property name="text">
@@ -74,7 +44,71 @@
             <string>Songs</string>
            </property>
           </column>
+          <column>
+           <property name="text">
+            <string>Schedule</string>
+           </property>
+          </column>
          </widget>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout">
+          <item>
+           <widget class="QPushButton" name="pb_addSequence">
+            <property name="text">
+             <string>Add Sequence</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pb_addPlaylist">
+            <property name="text">
+             <string>Add PlayList</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pb_deletePlaylist">
+            <property name="text">
+             <string>Delete Playlist</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pb_moveUp">
+            <property name="text">
+             <string>Move Up</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pb_moveDown">
+            <property name="text">
+             <string>Move Down</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pb_SetSchedule">
+            <property name="text">
+             <string>Set Schedule</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
         </item>
        </layout>
       </widget>
@@ -106,6 +140,13 @@
       </widget>
      </widget>
     </item>
+    <item>
+     <widget class="QLabel" name="lb_Status">
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+    </item>
    </layout>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -122,6 +163,7 @@
      <string>File</string>
     </property>
     <addaction name="actionSet_Show_Folder"/>
+    <addaction name="actionPlay_Sequence"/>
     <addaction name="separator"/>
     <addaction name="actionClose"/>
    </widget>
@@ -132,7 +174,15 @@
     <addaction name="actionAbout"/>
     <addaction name="actionOpen_Logs"/>
    </widget>
+   <widget class="QMenu" name="menuSettings">
+    <property name="title">
+     <string>Settings</string>
+    </property>
+    <addaction name="actionMultisync"/>
+    <addaction name="actionRDS"/>
+   </widget>
    <addaction name="menuFile"/>
+   <addaction name="menuSettings"/>
    <addaction name="menuAbout"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
@@ -265,6 +315,21 @@
   <action name="actionDownload_EEPROM">
    <property name="text">
     <string>Download EEPROM...</string>
+   </property>
+  </action>
+  <action name="actionPlay_Sequence">
+   <property name="text">
+    <string>Play Sequence</string>
+   </property>
+  </action>
+  <action name="actionMultisync">
+   <property name="text">
+    <string>Multisync</string>
+   </property>
+  </action>
+  <action name="actionRDS">
+   <property name="text">
+    <string>Audio</string>
    </property>
   </action>
  </widget>
