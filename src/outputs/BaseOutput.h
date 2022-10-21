@@ -10,10 +10,12 @@ struct BaseOutput: public QObject
 {
 	Q_OBJECT
 public:
-	virtual void Open() const = 0;
-	virtual void OutputFrame(uint8_t *data) const = 0;
+	virtual bool Open() = 0;
+	virtual void OutputFrame(uint8_t *data) = 0;
+	virtual void Close() = 0;
 
 	uint64_t StartChannel{0};
+	QString IP;
 };
 
 #endif

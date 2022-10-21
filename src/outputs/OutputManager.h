@@ -18,6 +18,9 @@ public:
     OutputManager();
     void LoadOutputs(QString const& outputConfig);
 
+    bool OpenOutputs();
+    void OutputData(uint8_t* data);
+
 Q_SIGNALS:
     void AddController(QString const& type, QString const& ip, QString const& channels);
 

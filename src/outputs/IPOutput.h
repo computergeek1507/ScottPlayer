@@ -6,10 +6,12 @@
 #include <QString>
 #include <QtNetwork>
 
+#include <memory>
+
 struct IPOutput : BaseOutput
 {
 	
-	QSharedPointer<QUdpSocket> m_UdpSocket;
+	std::unique_ptr<QUdpSocket> m_UdpSocket;
 };
 
 #endif

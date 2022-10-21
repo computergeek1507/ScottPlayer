@@ -11,6 +11,23 @@ OutputManager::OutputManager()
 
 }
 
+bool OutputManager::OpenOutputs()
+{
+	for (auto const& o : m_outputs)
+	{
+		o->Open();
+	}
+	return true;
+}
+
+void OutputManager::OutputData(uint8_t* data)
+{
+	for (auto const& o : m_outputs)
+	{
+		o->OutputFrame(data);
+	}
+}
+
 void OutputManager::LoadOutputs(QString const& outputConfig)
 {
 	QDomDocument xmlNetworks;
@@ -42,6 +59,7 @@ void OutputManager::LoadOutputs(QString const& outputConfig)
 				QString sPacketSize = networkXML.attribute("ChannelsPerPacket", "1440");
 
 				auto ddp = std::make_unique<DDPOutput>();
+				ddp->IP = ipAddress;
 				ddp->PacketSize = sPacketSize.toUInt();
 				ddp->KeepChannels = sPacketSize.toInt();
 				ddp->StartChannel = startChannel;
@@ -52,6 +70,7 @@ void OutputManager::LoadOutputs(QString const& outputConfig)
 			{
 				QString sPacketSize = networkXML.attribute("MaxChannels", "510");
 				auto e131 = std::make_unique<E131Output>();
+				e131->IP = ipAddress;
 				e131->PacketSize = sPacketSize.toUInt();
 				e131->Universe = universe.toUInt();
 				e131->StartChannel = startChannel;
