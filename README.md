@@ -1,6 +1,19 @@
 ### ScottPlayer
 
+####WIP
+Barebones FSEQ Sequence Player and Scheduler. 
+Only Supports Artnet, E131, and DDP Outputs. Supports v2 ZSTD, v2 Uncompressed, and v1 FSEQs, not v2 zlib 
 
+####TODO
+ - Finish Scheduler
+ - Add Multisync
+ - Fix ZSTD dependency install issues
+
+####Other Goals
+ - Remote Falcon Support
+ - RDS FM Support
+ - TPLink Support
+ - Colorlight Support
 
 ### Building
 Uses C++20, QT 5.15, spdlog, and cMake.
