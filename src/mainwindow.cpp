@@ -115,6 +115,11 @@ void MainWindow::on_actionPlay_Sequence_triggered()
 	}
 }
 
+void MainWindow::on_actionStop_Sequence_triggered()
+{
+	m_player->StopSequence();
+}
+
 void MainWindow::on_actionClose_triggered()
 {
 	close();
@@ -162,6 +167,7 @@ void MainWindow::ClearListData()
 void MainWindow::UpdateStatus(QString const& message)
 {
 	m_ui->lb_Status->setText(message);
+	m_logger->debug(message.toStdString());
 }
 
 void MainWindow::UpdatePlayback(QString const& sequenceName, int elapsedMS, int durationMS)
@@ -178,4 +184,3 @@ QString MainWindow::FormatTime(int ticksMS) const
 {
 	return QTime::fromMSecsSinceStartOfDay( ticksMS ).toString("mm:ss");
 }
-

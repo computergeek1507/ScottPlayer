@@ -5,6 +5,8 @@
 
 #include "../outputs/OutputManager.h"
 
+#include "spdlog/spdlog.h"
+
 #include <QMap>
 #include <QObject>
 #include <QString>
@@ -30,6 +32,7 @@ class SequencePlayer : public QObject
     Q_OBJECT
 public:
     SequencePlayer();
+    ~SequencePlayer();
 
     void LoadConfigs(QString const& configPath);
 
@@ -48,7 +51,7 @@ public Q_SLOTS:
     }
 
     void TriggerOutputData();
-    void on_durationChanged(qint64 );
+    void on_positionChanged(qint64 );
     
 
 Q_SIGNALS:
@@ -88,6 +91,8 @@ private:
     std::unique_ptr<QMediaPlayer> m_mediaPlayer{nullptr};
 
     std::unique_ptr<OutputManager> m_outputManager{nullptr};
+
+    std::shared_ptr<spdlog::logger> m_logger{ nullptr };
 
     char m_seqData[FPPD_MAX_CHANNELS];
 };

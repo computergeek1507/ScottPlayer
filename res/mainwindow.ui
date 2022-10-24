@@ -164,8 +164,10 @@
     </property>
     <addaction name="actionSet_Show_Folder"/>
     <addaction name="actionPlay_Sequence"/>
+    <addaction name="actionStop_Sequence"/>
     <addaction name="separator"/>
     <addaction name="actionClose"/>
+    <addaction name="separator"/>
    </widget>
    <widget class="QMenu" name="menuAbout">
     <property name="title">
@@ -330,6 +332,11 @@
   <action name="actionRDS">
    <property name="text">
     <string>Audio</string>
+   </property>
+  </action>
+  <action name="actionStop_Sequence">
+   <property name="text">
+    <string>Stop Sequence</string>
    </property>
   </action>
  </widget>

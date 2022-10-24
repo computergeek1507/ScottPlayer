@@ -14,8 +14,8 @@ std::string GetTag()
     return "xLights " + QString::number(QCoreApplication::applicationPid()).toStdString();
 }
 
-bool E131Output::Open() 
-{ 
+bool E131Output::Open()
+{
 	if (IP.isEmpty() || !Enabled) return false;
 
     memset(_data, 0x00, sizeof(_data));
@@ -68,7 +68,7 @@ bool E131Output::Open()
     _data[124] = 0x01;  // Property value count (low)
 
     m_UdpSocket = std::make_unique<QUdpSocket>(this);
-    
+
 
     if (IP.startsWith("239.255.") || IP == "MULTICAST") {
         // multicast - universe number must be in lower 2 bytes
@@ -107,17 +107,17 @@ bool E131Output::Open()
     return m_UdpSocket != nullptr;
 }
 
-void E131Output::OutputFrame(uint8_t* data) 
+void E131Output::OutputFrame(uint8_t* data)
 {
     if (!Enabled || m_UdpSocket == nullptr || m_UdpSocket->state() != QAbstractSocket::ConnectedState) return;
     //size_t chs = (std::min)(size, (size_t)(GetMaxChannels() - channel));
 
     size_t chs = PacketSize;
-    if (memcmp(&_data[E131_PACKET_HEADERLEN], &data[StartChannel], chs) == 0) {
+    if (memcmp(&_data[E131_PACKET_HEADERLEN], &data[StartChannel - 1], chs) == 0) {
         // nothing changed
     }
     else {
-        memcpy(&_data[E131_PACKET_HEADERLEN], &data[StartChannel], chs);
+        memcpy(&_data[E131_PACKET_HEADERLEN], &data[StartChannel - 1], chs);
     }
     m_UdpSocket->write((char*)&_data, E131_PACKET_LEN);
 }

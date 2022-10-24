@@ -3,9 +3,40 @@
 #include <QDir>
 
 SequencePlayer::SequencePlayer():
-	m_mediaPlayer(std::make_unique<QMediaPlayer>())
+	m_mediaPlayer(std::make_unique<QMediaPlayer>()),
+	//m_playbackThread(std::make_unique<QThread>(this)),
+	m_playbackTimer(std::make_unique<QTimer>(this)),
+	m_logger(spdlog::get("scottplayer"))
 {
 	memset(m_seqData, 0, sizeof(m_seqData));
+
+	//m_playbackTimer = std::make_unique<QTimer>(this);
+	m_playbackTimer->setTimerType(Qt::PreciseTimer);
+	//m_playbackTimer->setInterval(m_seqStepTime);
+
+	//m_playbackThread = std::make_unique<QThread>(this);
+	//moveToThread(&m_playbackThread);
+	//m_playbackTimer->moveToThread(&m_playbackThread);
+	//this->moveToThread(thread);
+	m_playbackTimer->moveToThread(&m_playbackThread);
+
+	connect(&m_playbackThread, SIGNAL(started()), m_playbackTimer.get(), SLOT(start()));
+	connect(m_playbackTimer.get(), SIGNAL(timeout()), this, SLOT(TriggerOutputData()));
+	connect(this, SIGNAL(finished()), m_playbackTimer.get(), SLOT(stop()));
+	connect(this, SIGNAL(finished()), &m_playbackThread, SLOT(quit()));
+
+
+	//m_mediaPlayer = std::make_unique<QMediaPlayer>();
+	connect(m_mediaPlayer.get(), &QMediaPlayer::positionChanged, this, &SequencePlayer::on_positionChanged);
+	m_mediaPlayer->setVolume(100);
+}
+
+SequencePlayer::~SequencePlayer()
+{
+	m_playbackTimer->stop();
+	m_playbackThread.requestInterruption();
+	m_playbackThread.quit();
+	m_playbackThread.wait();
 }
 
 void SequencePlayer::LoadConfigs(QString const& configPath)
@@ -19,6 +50,7 @@ void SequencePlayer::LoadSequence(QString const& sequencePath, QString const& me
 
 	if(!loaded)
 	{
+		m_logger->error("Unable to load sequence file: {}", sequencePath.toStdString());
 		//failed to load
 		return;
 	}
@@ -29,7 +61,7 @@ void SequencePlayer::LoadSequence(QString const& sequencePath, QString const& me
 	{
 		m_mediaFile = mediaPath;
 	}
-	
+
 	if(!m_mediaFile.isEmpty() && QFile::exists(m_mediaFile))
 	{
 		m_seqType = SeqType::Music;
@@ -59,11 +91,19 @@ void SequencePlayer::PlaySequence()
 
 void SequencePlayer::StopSequence()
 {
+	m_playbackTimer->stop();
 	m_playbackThread.requestInterruption();
 	m_playbackThread.quit();
 	m_playbackThread.wait();
+
+	if(m_mediaPlayer->state() == QMediaPlayer::PlayingState)
+	{
+		m_mediaPlayer->stop();
+	}
+
 	//stop timer
 	m_outputManager->CloseOutputs();
+	//emit UpdateStatus("Sequence Ended " + m_seqFileName);
 }
 
 void SequencePlayer::TriggerOutputData()
@@ -71,16 +111,18 @@ void SequencePlayer::TriggerOutputData()
 	m_lastFrameData->readFrame((uint8_t*)m_seqData, FPPD_MAX_CHANNELS);
 	m_outputManager->OutputData((uint8_t*)m_seqData);
 	m_lastFrameRead++;
+
+	if((m_lastFrameRead * m_seqStepTime) % 1000 == 0)
+	{
+		emit UpdateTime(m_seqFileName, m_lastFrameRead * m_seqStepTime, m_seqMSDuration );
+	}
+
 	if(m_lastFrameRead >= m_numberofFrame)
 	{
 		StopSequence();
 		return;
 	}
 	m_lastFrameData = m_seqFile->getFrame(m_lastFrameRead);
-	if((m_lastFrameRead * m_seqStepTime) % 1000 == 0)
-	{
-		emit UpdateTime(m_seqFileName, m_lastFrameRead * m_seqStepTime, m_seqMSDuration );
-	}
 }
 
 void SequencePlayer::LoadOutputs(QString const& configPath)
@@ -97,11 +139,11 @@ void SequencePlayer::LoadOutputs(QString const& configPath)
 bool SequencePlayer::LoadSeqFile(QString const& sequencePath)
 {
 	m_seqFile = nullptr;
-    FSEQFile* seqFile = FSEQFile::openFSEQFile(sequencePath.toStdString());
-    if (seqFile == nullptr) 
+	FSEQFile* seqFile = FSEQFile::openFSEQFile(sequencePath.toStdString());
+	if (seqFile == nullptr)
 	{
-        return false;
-    }
+		return false;
+	}
 	m_seqStepTime = seqFile->getStepTime();
 
 	m_mediaFile = QString::fromStdString(seqFile->getMediaFilename());
@@ -109,41 +151,51 @@ bool SequencePlayer::LoadSeqFile(QString const& sequencePath)
 	m_seqFile = seqFile;
 
 	m_seqMSDuration = seqFile->getNumFrames() * seqFile->getStepTime();
-    m_numberofFrame = seqFile->getNumFrames();
+	m_numberofFrame = seqFile->getNumFrames();
 	return true;
 }
 
 void SequencePlayer::StartAnimationSeq()
 {
-	m_playbackTimer = std::make_unique<QTimer>(this);
-    m_playbackTimer->setTimerType(Qt::PreciseTimer);
-    m_playbackTimer->setInterval(m_seqStepTime);
+	//m_playbackTimer = std::make_unique<QTimer>(this);
+    //m_playbackTimer->setTimerType(Qt::PreciseTimer);
+    //m_playbackTimer->setInterval(m_seqStepTime);
 
     //m_playbackThread = std::make_unique<QThread>(this);
-    moveToThread(&m_playbackThread);
-    m_playbackTimer->moveToThread(&m_playbackThread);
+    //moveToThread(&m_playbackThread);
+    //m_playbackTimer->moveToThread(&m_playbackThread);
     //this->moveToThread(thread);
+	//m_playbackTimer->moveToThread( &m_playbackThread );
 
-    connect(&m_playbackThread, SIGNAL(started()), m_playbackTimer.get(), SLOT(start()));
-    connect(m_playbackTimer.get(), SIGNAL(timeout()), this, SLOT(TriggerOutputData()));
-    connect(this, SIGNAL(finished()), m_playbackTimer.get(), SLOT(stop()));
-    connect(this, SIGNAL(finished()), &m_playbackThread, SLOT(quit()));
+    //connect(&m_playbackThread, SIGNAL(started()), m_playbackTimer.get(), SLOT(start()));
+    //connect(m_playbackTimer.get(), SIGNAL(timeout()), this, SLOT(TriggerOutputData()));
+    //connect(this, SIGNAL(finished()), m_playbackTimer.get(), SLOT(stop()));
+    //connect(this, SIGNAL(finished()), &m_playbackThread, SLOT(quit()));
 
+	m_playbackTimer->setInterval(m_seqStepTime);
 	emit UpdateStatus("Playing " + m_seqFileName);
-    m_playbackThread.start();
+	m_playbackThread.start();
 }
 
-void SequencePlayer::on_durationChanged(qint64 )
+void SequencePlayer::on_positionChanged(qint64 )
 {
 	TriggerOutputData();
 }
 
 void SequencePlayer::StartMusicSeq()
 {
-	m_mediaPlayer = std::make_unique<QMediaPlayer>();
+	if(!QFile::exists(m_mediaFile))
+	{
+		m_logger->error("Unable to find media file: {}", m_mediaFile.toStdString());
+		return;
+	}
 	m_mediaPlayer->setMedia(QUrl::fromLocalFile(m_mediaFile));
 	m_mediaPlayer->setNotifyInterval(m_seqStepTime);
-	connect(m_mediaPlayer.get(), &QMediaPlayer::durationChanged, this, &SequencePlayer::on_durationChanged);
 	emit UpdateStatus("Playing " + m_seqFileName);
+
+	if(m_mediaPlayer->mediaStatus() == QMediaPlayer::NoMedia )
+	{
+
+	}
 	m_mediaPlayer->play();
 }

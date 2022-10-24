@@ -32,6 +32,7 @@ public Q_SLOTS:
 
     void on_actionSet_Show_Folder_triggered();
     void on_actionPlay_Sequence_triggered();
+    void on_actionStop_Sequence_triggered();
     void on_actionClose_triggered();
 
     void on_actionAbout_triggered();

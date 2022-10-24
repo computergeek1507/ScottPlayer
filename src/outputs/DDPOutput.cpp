@@ -12,7 +12,7 @@ bool DDPOutput::Open()
 	//if (_fulldata != nullptr) delete _fulldata;
     //_fulldata = (uint8_t*)malloc(Channels);
     //if (_fulldata == nullptr) {
-    //    
+    //
     //    return false;
     //}
 
@@ -27,11 +27,11 @@ bool DDPOutput::Open()
     return m_UdpSocket != nullptr;
 }
 
-void DDPOutput::OutputFrame(uint8_t* data) 
-{ 
+void DDPOutput::OutputFrame(uint8_t* data)
+{
     if (!Enabled || m_UdpSocket == nullptr || m_UdpSocket->state() != QAbstractSocket::ConnectedState) return;
 
-    int32_t index = StartChannel;
+    int32_t index = StartChannel - 1;
     int32_t chan = KeepChannels ? (StartChannel - 1) : 0;
     int32_t tosend = Channels;
 

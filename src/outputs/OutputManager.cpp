@@ -22,10 +22,10 @@ bool OutputManager::OpenOutputs()
 
 void OutputManager::CloseOutputs()
 {
-	//for (auto const& o : m_outputs)
-	//{
-	//	o->Close();
-	//}
+	for (auto const& o : m_outputs)
+	{
+		o->Close();
+	}
 }
 
 void OutputManager::OutputData(uint8_t* data)
