@@ -3,6 +3,8 @@
 
 #include "BaseOutput.h"
 
+#include "spdlog/spdlog.h"
+
 #include <QString>
 #include <QObject>
 
@@ -28,6 +30,7 @@ Q_SIGNALS:
 
 private:
     std::vector<std::unique_ptr<BaseOutput>> m_outputs;
+    std::shared_ptr<spdlog::logger> m_logger{ nullptr };
 };
 
 #endif

@@ -33,30 +33,14 @@
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_2">
         <item>
-         <widget class="QTableWidget" name="twPlaylists">
-          <column>
-           <property name="text">
-            <string>Name</string>
-           </property>
-          </column>
-          <column>
-           <property name="text">
-            <string>Songs</string>
-           </property>
-          </column>
-          <column>
-           <property name="text">
-            <string>Schedule</string>
-           </property>
-          </column>
-         </widget>
-        </item>
-        <item>
-         <layout class="QHBoxLayout" name="horizontalLayout">
+         <layout class="QHBoxLayout" name="horizontalLayout_2">
           <item>
-           <widget class="QPushButton" name="pb_addSequence">
-            <property name="text">
-             <string>Add Sequence</string>
+           <widget class="QComboBox" name="cb_playlists">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
             </property>
            </widget>
           </item>
@@ -75,6 +59,66 @@
            </widget>
           </item>
           <item>
+           <widget class="QPushButton" name="pb_playPlaylist">
+            <property name="text">
+             <string>Play Playlist</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer_2">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QTableWidget" name="twPlaylists">
+          <column>
+           <property name="text">
+            <string>Name</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Songs</string>
+           </property>
+          </column>
+         </widget>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout">
+          <item>
+           <widget class="QPushButton" name="pb_addSequence">
+            <property name="text">
+             <string>Add Sequence</string>
+            </property>
+            <property name="icon">
+             <iconset resource="ScottPlayer.qrc">
+              <normaloff>:/ScottPlayer/icons/add.png</normaloff>:/ScottPlayer/icons/add.png</iconset>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pb_removeSequence">
+            <property name="text">
+             <string>Delete Sequence</string>
+            </property>
+            <property name="icon">
+             <iconset resource="ScottPlayer.qrc">
+              <normaloff>:/ScottPlayer/icons/delete.png</normaloff>:/ScottPlayer/icons/delete.png</iconset>
+            </property>
+           </widget>
+          </item>
+          <item>
            <widget class="QPushButton" name="pb_moveUp">
             <property name="text">
              <string>Move Up</string>
@@ -89,14 +133,98 @@
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="pb_SetSchedule">
+           <widget class="QPushButton" name="pb_playSequence">
             <property name="text">
-             <string>Set Schedule</string>
+             <string>Play Sequence</string>
             </property>
            </widget>
           </item>
           <item>
            <spacer name="horizontalSpacer">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tab">
+       <attribute name="title">
+        <string>Schedules</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_3">
+        <item>
+         <widget class="QTableWidget" name="tw_schedules">
+          <column>
+           <property name="text">
+            <string>PlayList</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Start Time</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>EndTime</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Days</string>
+           </property>
+          </column>
+         </widget>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_3">
+          <item>
+           <widget class="QPushButton" name="pb_addSchedule">
+            <property name="text">
+             <string>Add Schedule</string>
+            </property>
+            <property name="icon">
+             <iconset resource="ScottPlayer.qrc">
+              <normaloff>:/ScottPlayer/icons/add.png</normaloff>:/ScottPlayer/icons/add.png</iconset>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pb_deleteSchedule">
+            <property name="text">
+             <string>Remove Schedule</string>
+            </property>
+            <property name="icon">
+             <iconset resource="ScottPlayer.qrc">
+              <normaloff>:/ScottPlayer/icons/delete.png</normaloff>:/ScottPlayer/icons/delete.png</iconset>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pb_sch_moveUp">
+            <property name="text">
+             <string>Move Up</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pb_sch_moveDown">
+            <property name="text">
+             <string>Move Down</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer_3">
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
             </property>
@@ -163,11 +291,10 @@
      <string>File</string>
     </property>
     <addaction name="actionSet_Show_Folder"/>
-    <addaction name="actionPlay_Sequence"/>
+    <addaction name="actionSave"/>
     <addaction name="actionStop_Sequence"/>
     <addaction name="separator"/>
     <addaction name="actionClose"/>
-    <addaction name="separator"/>
    </widget>
    <widget class="QMenu" name="menuAbout">
     <property name="title">
@@ -337,6 +464,15 @@
   <action name="actionStop_Sequence">
    <property name="text">
     <string>Stop Sequence</string>
+   </property>
+  </action>
+  <action name="actionSave">
+   <property name="icon">
+    <iconset resource="ScottPlayer.qrc">
+     <normaloff>:/ScottPlayer/icons/disk.png</normaloff>:/ScottPlayer/icons/disk.png</iconset>
+   </property>
+   <property name="text">
+    <string>Save</string>
    </property>
   </action>
  </widget>

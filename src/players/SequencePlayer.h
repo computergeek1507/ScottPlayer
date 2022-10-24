@@ -27,6 +27,12 @@ enum class SeqType
     Music
 };
 
+enum class PlaybackStatus
+{
+    Playing,
+    Stopped
+};
+
 class SequencePlayer : public QObject
 {
     Q_OBJECT
@@ -38,7 +44,7 @@ public:
 
 public Q_SLOTS:
     void LoadSequence(QString const& sequencePath, QString const& mediaPath = QString());
-    void PlaySequence();
+
     void StopSequence();
     void LoadOutputs(QString const& configPath);
     void on_AddController(QString const& type, QString const& ip, QString const& channels)
@@ -60,7 +66,10 @@ Q_SIGNALS:
     void UpdateStatus(QString const& message);
     void UpdateTime(QString const& sequenceName, int elapsedMS, int durationMS);
 
+    void UpdatePlaybackStatus(QString const& sequencePath, PlaybackStatus status);
+
 private:
+    void PlaySequence();
     bool LoadSeqFile(QString const& sequencePath);
     void StartAnimationSeq();
 

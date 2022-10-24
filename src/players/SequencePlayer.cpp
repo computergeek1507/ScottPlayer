@@ -37,6 +37,8 @@ SequencePlayer::~SequencePlayer()
 	m_playbackThread.requestInterruption();
 	m_playbackThread.quit();
 	m_playbackThread.wait();
+	delete m_seqFile;
+	delete m_lastFrameData;
 }
 
 void SequencePlayer::LoadConfigs(QString const& configPath)

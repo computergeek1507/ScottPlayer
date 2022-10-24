@@ -1,12 +1,16 @@
 #include "OutputManager.h"
 
+#include "ArtNetOutput.h"
 #include "DDPOutput.h"
 #include "E131Output.h"
+
+
 
 #include <QtXml>
 #include <QFile>
 
-OutputManager::OutputManager()
+OutputManager::OutputManager():
+		m_logger(spdlog::get("scottplayer"))
 {
 
 }
@@ -91,8 +95,22 @@ bool OutputManager::LoadOutputs(QString const& outputConfig)
 				m_outputs.push_back(std::move(e131));
 				emit AddController(nType, ipAddress, sChannels);
 			}
+			else if ("ArtNet" == nType)
+			{
+				QString const sPacketSize = networkXML.attribute("MaxChannels", "510");
+				auto artnet = std::make_unique<ArtNetOutput>();
+				artnet->IP = ipAddress;
+				artnet->PacketSize = sPacketSize.toUInt();
+				artnet->Universe = universe.toUInt();
+				artnet->StartChannel = startChannel;
+				artnet->Channels = iChannels;//todo fix
+				artnet->Enabled = active;
+				m_outputs.push_back(std::move(artnet));
+				emit AddController(nType, ipAddress, sChannels);
+			}
 			else
 			{
+				m_logger->warn("Unsupported output type: {}", nType.toStdString());
 				//unsupported type
 			}
 			startChannel += iChannels;
