@@ -41,7 +41,6 @@ public Q_SLOTS:
 
     void on_pb_addPlaylist_clicked();
     void on_pb_deletePlaylist_clicked();
-    void on_pb_playPlaylist_clicked();
 
     void on_pb_addSequence_clicked();
     void on_pb_removeSequence_clicked();
@@ -49,10 +48,17 @@ public Q_SLOTS:
     void on_pb_moveDown_clicked();
     void on_pb_playSequence_clicked();
 
+    void on_pb_addSchedule_clicked();
+    void on_pb_deleteSchedule_clicked();
+    void on_pb_sch_moveUp_clicked();
+    void on_pb_sch_moveDown_clicked();
+
     void on_cb_playlists_currentIndexChanged( int index );
     
     void AddController_Received(QString const&,QString const&,QString const&);
     void RedrawPlaylist(int index);
+
+    void SelectSequence(int index);
 
     void ClearListData();
     void UpdateStatus(QString const& message);

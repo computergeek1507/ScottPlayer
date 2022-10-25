@@ -37,12 +37,15 @@ public Q_SLOTS:
     void PlaySequence(int playlist_index, int sequence_index) const;
     void DeleteSequence(int playlist_index, int sequence_index);
     void DeletePlayList(int playlist_index);
+    void MoveSequenceUp(int playlist_index, int sequence_index);
+    void MoveSequenceDown(int playlist_index, int sequence_index);
 
 Q_SIGNALS:
     void PlaySequenceSend(QString const& sequencePath, QString const& mediaPath) const;
     void DisplayPlaylistSend(int index);
     void AddPlaylistSend(QString const& playlist, int index);
     void MessageSend(QString const& message);
+    void SelectSequenceSend(int index);
 
 private:
 

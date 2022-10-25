@@ -77,6 +77,7 @@ MainWindow::MainWindow(QWidget* parent)
 	connect(m_playlists.get(), &PlayListManager::AddPlaylistSend, this, &MainWindow::AddPlaylist);
 	connect(m_playlists.get(), &PlayListManager::DisplayPlaylistSend, this, &MainWindow::RedrawPlaylist);
 	connect(m_playlists.get(), &PlayListManager::MessageSend, this, &MainWindow::UpdateStatus);
+	connect(m_playlists.get(), &PlayListManager::SelectSequenceSend, this, &MainWindow::SelectSequence);
 
 	auto lastfolder{ m_settings->value("last_folder").toString() };
 
@@ -163,11 +164,6 @@ void MainWindow::on_pb_deletePlaylist_clicked()
 	m_ui->cb_playlists->removeItem(m_ui->cb_playlists->currentIndex());
 }
 
-void MainWindow::on_pb_playPlaylist_clicked()
-{
-	m_ui->cb_playlists->currentData().toInt();
-}
-
 void MainWindow::on_pb_addSequence_clicked()
 {
 	QString const fseqFile = QFileDialog::getOpenFileName(this, "Select FSEQ File", m_settings->value("last_fseq").toString(), tr("FSEQ Files (*.fseq);;All Files (*.*)"));
@@ -193,15 +189,37 @@ void MainWindow::on_pb_removeSequence_clicked()
 
 void MainWindow::on_pb_moveUp_clicked()
 {
+	m_playlists->MoveSequenceUp(m_ui->cb_playlists->currentData().toInt(), m_ui->twPlaylists->currentRow());
 }
 
 void MainWindow::on_pb_moveDown_clicked()
 {
+	m_playlists->MoveSequenceDown(m_ui->cb_playlists->currentData().toInt(), m_ui->twPlaylists->currentRow());
 }
 
 void MainWindow::on_pb_playSequence_clicked()
 {
 	m_playlists->PlaySequence(m_ui->cb_playlists->currentData().toInt(),m_ui->twPlaylists->currentRow());
+}
+
+void MainWindow::on_pb_addSchedule_clicked()
+{
+
+}
+
+void MainWindow::on_pb_deleteSchedule_clicked()
+{
+
+}
+
+void MainWindow::on_pb_sch_moveUp_clicked()
+{
+
+}
+
+void MainWindow::on_pb_sch_moveDown_clicked()
+{
+
 }
 
 void MainWindow::AddController_Received(QString const& type, QString const& ip, QString const& channel)
@@ -219,6 +237,11 @@ void MainWindow::AddController_Received(QString const& type, QString const& ip, 
 	SetItem(row, 1, ip);
 	SetItem(row, 2, channel);
 	m_ui->twControllers->resizeColumnsToContents();
+}
+
+void MainWindow::SelectSequence(int index) 
+{
+	m_ui->twPlaylists->selectRow(index);
 }
 
 void MainWindow::on_cb_playlists_currentIndexChanged( int index )
