@@ -4,8 +4,6 @@
 #include "DDPOutput.h"
 #include "E131Output.h"
 
-
-
 #include <QtXml>
 #include <QFile>
 
@@ -80,7 +78,7 @@ bool OutputManager::LoadOutputs(QString const& outputConfig)
 				ddp->Channels = iChannels;
 				ddp->Enabled = active;
 				m_outputs.push_back(std::move(ddp));
-				emit AddController(nType, ipAddress, sChannels);
+				emit AddController(active, nType, ipAddress, sChannels);
 			}
 			else if ("E131" == nType)
 			{
@@ -93,7 +91,7 @@ bool OutputManager::LoadOutputs(QString const& outputConfig)
 				e131->Channels = iChannels;//todo fix
 				e131->Enabled = active;
 				m_outputs.push_back(std::move(e131));
-				emit AddController(nType, ipAddress, sChannels);
+				emit AddController(active, nType, ipAddress, sChannels);
 			}
 			else if ("ArtNet" == nType)
 			{
@@ -106,7 +104,7 @@ bool OutputManager::LoadOutputs(QString const& outputConfig)
 				artnet->Channels = iChannels;//todo fix
 				artnet->Enabled = active;
 				m_outputs.push_back(std::move(artnet));
-				emit AddController(nType, ipAddress, sChannels);
+				emit AddController(active, nType, ipAddress, sChannels);
 			}
 			else
 			{

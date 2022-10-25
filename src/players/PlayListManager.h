@@ -3,6 +3,8 @@
 
 #include "SequencePlayer.h"
 
+#include "Schedule.h"
+
 #include "spdlog/spdlog.h"
 
 #include <QObject>
@@ -12,7 +14,7 @@
 #include <vector>
 
 struct PlayList;
-struct Schedule;
+//struct Schedule;
 
 class PlayListManager : public QObject
 {
@@ -44,7 +46,8 @@ public Q_SLOTS:
     void MoveSequenceUp(int playlist_index, int sequence_index);
     void MoveSequenceDown(int playlist_index, int sequence_index);
 
-    void AddSchedule(QString const& playlist, QTime const& startTime, QTime const& endTime, QDate const& startDate, QDate const& endDate, QStringList const& days);
+    void AddSchedule(Schedule schedule);
+    void EditSchedule(int schedule_index, Schedule schedule);
 
     void DeleteSchedule(int schedule_index);
     void MoveScheduleUp(int schedule_index);

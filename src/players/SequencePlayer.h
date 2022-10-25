@@ -4,6 +4,7 @@
 #include "../fseq/FSEQFile.h"
 
 #include "../outputs/OutputManager.h"
+#include "../outputs/SyncManager.h"
 
 #include "spdlog/spdlog.h"
 
@@ -48,9 +49,10 @@ public Q_SLOTS:
 
     void StopSequence();
     void LoadOutputs(QString const& configPath);
-    void on_AddController(QString const& type, QString const& ip, QString const& channels)
+    void LoadSync(QString const& configPath);
+    void on_AddController(bool enabled, QString const& type, QString const& ip, QString const& channels)
     {
-        emit AddController(type, ip, channels);
+        emit AddController(enabled, type, ip, channels);
     }
     void setTotalChannels(uint64_t channels)
     {
@@ -63,7 +65,7 @@ public Q_SLOTS:
 
 Q_SIGNALS:
     void UpdateSequence(QString const& sequenceName, QString const& media, int frames, int frameSizeMS);
-    void AddController(QString const& type, QString const& ip, QString const& channels);
+    void AddController(bool enabled, QString const& type, QString const& ip, QString const& channels);
     void UpdateStatus(QString const& message);
     void UpdateTime(QString const& sequenceName, int elapsedMS, int durationMS);
 
@@ -101,6 +103,8 @@ private:
     std::unique_ptr<QMediaPlayer> m_mediaPlayer{nullptr};
 
     std::unique_ptr<OutputManager> m_outputManager{nullptr};
+
+    std::unique_ptr<SyncManager> m_syncManager{nullptr};
 
     std::shared_ptr<spdlog::logger> m_logger{ nullptr };
 

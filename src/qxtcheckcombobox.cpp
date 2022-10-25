@@ -236,6 +236,19 @@ void QxtCheckComboBox::setCheckedItems(const QStringList& items)
     }
 }
 
+void QxtCheckComboBox::clearCheckedItems()
+{
+    if (model())
+    {
+        QModelIndex index = model()->index(0, modelColumn(), rootModelIndex());
+        QModelIndexList indexes = model()->match(index, Qt::CheckStateRole, Qt::Checked, -1, Qt::MatchExactly);
+        foreach(const QModelIndex& index, indexes)
+        {
+            setItemCheckState(index.row(), Qt::Unchecked);
+        }
+    }
+}
+
 /*!
     \property QxtCheckComboBox::defaultText
     \brief the default text.

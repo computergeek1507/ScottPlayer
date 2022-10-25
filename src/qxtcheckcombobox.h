@@ -63,6 +63,8 @@ public:
 public Q_SLOTS:
     void setCheckedItems(const QStringList& items);
 
+    void clearCheckedItems();
+
 Q_SIGNALS:
     void checkedItemsChanged(const QStringList& items);
 

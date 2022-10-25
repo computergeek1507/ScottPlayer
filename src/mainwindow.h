@@ -8,6 +8,7 @@
 #include "spdlog/common.h"
 
 #include <QMainWindow>
+#include <QSettings>
 
 #include <memory>
 #include <filesystem>
@@ -18,7 +19,6 @@ namespace Ui { class MainWindow; }
 class QListWidgetItem;
 class QListWidget;
 class QTableWidget;
-class QSettings;
 QT_END_NAMESPACE
 
 class MainWindow : public QMainWindow
@@ -35,6 +35,8 @@ public Q_SLOTS:
     void on_actionSave_triggered();
     void on_actionStop_Sequence_triggered();
     void on_actionClose_triggered();
+
+    void on_actionMultisync_triggered();
 
     void on_actionAbout_triggered();
     void on_actionOpen_Logs_triggered();
@@ -56,7 +58,7 @@ public Q_SLOTS:
 
     void on_cb_playlists_currentIndexChanged( int index );
     
-    void AddController_Received(QString const&,QString const&,QString const&);
+    void AddController_Received(bool, QString const&, QString const&, QString const&);
     void RedrawPlaylist(int index);
 
     void SelectSequence(int index);

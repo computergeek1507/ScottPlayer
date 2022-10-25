@@ -7,6 +7,8 @@
 
 #include "ui_addschedule.h"
 
+struct Schedule;
+
 class AddSchedule : public QDialog
 {
 	Q_OBJECT
@@ -17,14 +19,16 @@ public:
 
 	int Load(QStringList const& playlists);
 
-	void SetData(QString const& playlist, QTime const& startTime, QTime const& endTime, QDate const& startDate, QDate const& endDate, QStringList const& days);
+	int LoadData(QStringList const& playlists, Schedule const& schedule);
 
-	[[nodiscard]] QString GetPlayList() const { return ui->cb_playlists->currentText(); }
-	[[nodiscard]] QTime GetStartTime() const { return ui->te_startTime->time(); }
-	[[nodiscard]] QTime GetEndTime() const { return ui->te_endTime->time(); }
-	[[nodiscard]] QDate GetStartDate() const { return ui->de_startDate->date(); }
-	[[nodiscard]] QDate GetEndDate() const { return ui->de_endDate->date(); }
-	[[nodiscard]] QStringList GetDays() const { return m_days; }
+	[[nodiscard]] Schedule GetSchedule() const;
+
+	//[[nodiscard]] QString GetPlayList() const { return ui->cb_playlists->currentText(); }
+	//[[nodiscard]] QTime GetStartTime() const { return ui->te_startTime->time(); }
+	//[[nodiscard]] QTime GetEndTime() const { return ui->te_endTime->time(); }
+	//[[nodiscard]] QDate GetStartDate() const { return ui->de_startDate->date(); }
+	//[[nodiscard]] QDate GetEndDate() const { return ui->de_endDate->date(); }
+	//[[nodiscard]] QStringList GetDays() const { return m_days; }
 
 public Q_SLOTS:
 	void on_buttonBox_accepted();

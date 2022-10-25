@@ -1,7 +1,6 @@
 #include "PlayListManager.h"
 
 #include "PlayList.h"
-#include "Schedule.h"
 
 #include <QFile>
 #include <QDir>
@@ -158,9 +157,9 @@ void PlayListManager::AddSequence(QString const& fseqPath, QString const& mediaP
 	emit DisplayPlaylistSend(index);
 }
 
-void PlayListManager::AddSchedule(QString const& playlist, QTime const& startTime, QTime const& endTime, QDate const& startDate, QDate const& endDate, QStringList const& days)
+void PlayListManager::AddSchedule(Schedule schedule)
 {
-	m_schedules.emplace_back(playlist, startTime, endTime, startDate, endDate, days);
+	m_schedules.emplace_back(std::move(schedule));
 	emit DisplayScheduleSend();
 }
 
@@ -172,6 +171,16 @@ void PlayListManager::DeleteSchedule(int schedule_index)
 	}
 
 	m_schedules.erase(m_schedules.begin() + schedule_index);
+	emit DisplayScheduleSend();
+}
+
+void PlayListManager::EditSchedule(int schedule_index, Schedule schedule)
+{
+	if (schedule_index < 0 || schedule_index > m_schedules.size())
+	{
+		return;
+	}
+	m_schedules[schedule_index] = std::move(schedule);
 	emit DisplayScheduleSend();
 }
 

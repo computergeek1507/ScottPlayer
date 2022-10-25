@@ -33,6 +33,11 @@
 #include "spdlog/sinks/rotating_file_sink.h"
 
 #include <filesystem>
+#include <utility>
+
+enum class PlaylistColumn: int { SeqFile=0, MediaFile };
+enum class ScheduleColumn: int { Playlist=0, StartTime, EndTime, StartDate, EndDate, Days };
+enum class ControllerColumn: int { Type=0, Address, Channels, Enabled };
 
 MainWindow::MainWindow(QWidget* parent)
 	: QMainWindow(parent)
@@ -137,6 +142,11 @@ void MainWindow::on_actionClose_triggered()
 	close();
 }
 
+void MainWindow::on_actionMultisync_triggered()
+{
+
+}
+
 void MainWindow::on_actionAbout_triggered()
 {
 	QString text = QString("Scott Player v%1<br>QT v%2<br><br>Icons by:")
@@ -212,13 +222,22 @@ void MainWindow::on_pb_addSchedule_clicked()
 	AddSchedule pn(this);
 	if (pn.Load(m_playlists->GetPlayLists()))
 	{
-		m_playlists->AddSchedule(pn.GetPlayList(), pn.GetStartTime(), pn.GetEndTime(), pn.GetStartDate(), pn.GetEndDate(), pn.GetDays());
+		m_playlists->AddSchedule(pn.GetSchedule());
 	}
 }
 
 void MainWindow::on_pb_editSchedule_clicked()
 {
-
+	if(-1 == m_ui->tw_schedules->currentRow())
+	{
+		return;
+	}
+	auto row = m_ui->tw_schedules->currentRow();
+	AddSchedule pn(this);
+	if (pn.LoadData(m_playlists->GetPlayLists(), m_playlists->GetSchedules().at(row)))
+	{
+		m_playlists->EditSchedule(row, pn.GetSchedule());
+	}
 }
 
 void MainWindow::on_pb_deleteSchedule_clicked()
@@ -236,20 +255,21 @@ void MainWindow::on_pb_sch_moveDown_clicked()
 	m_playlists->MoveScheduleDown( m_ui->tw_schedules->currentRow());
 }
 
-void MainWindow::AddController_Received(QString const& type, QString const& ip, QString const& channel)
+void MainWindow::AddController_Received(bool enabled, QString const& type, QString const& ip, QString const& channel)
 {
-	auto SetItem = [&](int row, int col, QString const& text)
+	auto SetItem = [&](int row, ControllerColumn col, QString const& text)
 	{
-		m_ui->twControllers->setItem(row, col, new QTableWidgetItem());
-		m_ui->twControllers->item(row, col)->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
-		m_ui->twControllers->item(row, col)->setText(text);
+		m_ui->twControllers->setItem(row, std::to_underlying(col), new QTableWidgetItem());
+		m_ui->twControllers->item(row, std::to_underlying(col))->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
+		m_ui->twControllers->item(row, std::to_underlying(col))->setText(text);
 	};
 
 	int row = m_ui->twControllers->rowCount();
 	m_ui->twControllers->insertRow(row);
-	SetItem(row, 0, type);
-	SetItem(row, 1, ip);
-	SetItem(row, 2, channel);
+	SetItem(row, ControllerColumn::Enabled, enabled ? "true" : "false");
+	SetItem(row, ControllerColumn::Type, type);
+	SetItem(row, ControllerColumn::Address, ip);
+	SetItem(row, ControllerColumn::Channels, channel);
 	m_ui->twControllers->resizeColumnsToContents();
 }
 
@@ -266,12 +286,12 @@ void MainWindow::on_cb_playlists_currentIndexChanged( int index )
 void MainWindow::RedrawPlaylist(int index)
 {
 	m_ui->twPlaylists->clearContents();
-	auto SetItem = [&](int row, int col, QString const& text)
+	auto SetItem = [&](int row, PlaylistColumn col, QString const& text)
 	{
-		m_ui->twPlaylists->setItem(row, col, new QTableWidgetItem());
-		m_ui->twPlaylists->item(row, col)->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
-		m_ui->twPlaylists->item(row, col)->setText(text);
-		m_ui->twPlaylists->item(row, col)->setData(Qt::UserRole, row);
+		m_ui->twPlaylists->setItem(row, std::to_underlying(col), new QTableWidgetItem());
+		m_ui->twPlaylists->item(row, std::to_underlying(col))->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
+		m_ui->twPlaylists->item(row, std::to_underlying(col))->setText(text);
+		m_ui->twPlaylists->item(row, std::to_underlying(col))->setData(Qt::UserRole, row);
 	};
 	if(auto const& playlistRef = m_playlists->GetPlayList(index); playlistRef)
 	{
@@ -282,8 +302,8 @@ void MainWindow::RedrawPlaylist(int index)
 		for(auto const& item : playlist.PlayListItems)
 		{
 			
-			SetItem(row, 0, GetFileName(item.SequenceFile));
-			SetItem(row, 1, GetFileName(item.MediaFile));
+			SetItem(row, PlaylistColumn::SeqFile, GetFileName(item.SequenceFile));
+			SetItem(row, PlaylistColumn::MediaFile, GetFileName(item.MediaFile));
 			++row;
 		}
 	}
@@ -293,12 +313,12 @@ void MainWindow::RedrawPlaylist(int index)
 void MainWindow::RedrawSchedule()
 {
 	m_ui->tw_schedules->clearContents();
-	auto SetItem = [&](int row, int col, QString const& text)
+	auto SetItem = [&](int row, ScheduleColumn col, QString const& text)
 	{
-		m_ui->tw_schedules->setItem(row, col, new QTableWidgetItem());
-		m_ui->tw_schedules->item(row, col)->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
-		m_ui->tw_schedules->item(row, col)->setText(text);
-		m_ui->tw_schedules->item(row, col)->setData(Qt::UserRole, row);
+		m_ui->tw_schedules->setItem(row, std::to_underlying(col), new QTableWidgetItem());
+		m_ui->tw_schedules->item(row, std::to_underlying(col))->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
+		m_ui->tw_schedules->item(row, std::to_underlying(col))->setText(text);
+		m_ui->tw_schedules->item(row, std::to_underlying(col))->setData(Qt::UserRole, row);
 	};
 	
 		m_ui->tw_schedules->setRowCount(static_cast<int>(m_playlists->GetSchedules().size()));
@@ -306,10 +326,12 @@ void MainWindow::RedrawSchedule()
 		for (auto const& shed : m_playlists->GetSchedules())
 		{
 
-			SetItem(row, 0, shed.PlayListName);
-			SetItem(row, 1, shed.StartTime.toString());
-			SetItem(row, 2, shed.EndTime.toString());
-			SetItem(row, 3, shed.Days.join(","));
+			SetItem(row, ScheduleColumn::Playlist, shed.PlayListName);
+			SetItem(row, ScheduleColumn::StartTime, shed.StartTime.toString());
+			SetItem(row, ScheduleColumn::EndTime, shed.EndTime.toString());
+			SetItem(row, ScheduleColumn::StartDate, shed.StartDate.toString());
+			SetItem(row, ScheduleColumn::EndDate, shed.EndDate.toString());
+			SetItem(row, ScheduleColumn::Days, shed.Days.join(","));
 			++row;
 		}
 	

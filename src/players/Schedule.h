@@ -5,7 +5,7 @@
 #include <QDateTime>
 #include <QJsonObject>
 #include <QJsonValue>
-
+#include <QMetaType>
 struct Schedule
 {
 	//QString Name;
@@ -17,6 +17,10 @@ struct Schedule
 	QStringList Days;
 
 	Schedule() = default;
+	~Schedule() = default;
+
+	Schedule(const Schedule &) = default;
+    Schedule &operator=(const Schedule &) = default;
 
 	Schedule(QString const& playlist, QTime const& startTime, QTime const& endTime, QDate const& startDate, QDate const& endDate, QStringList const& days ) :
 		PlayListName(playlist), StartTime(startTime), EndTime(endTime), StartDate(startDate), EndDate(endDate), Days(days)
@@ -51,5 +55,7 @@ struct Schedule
 		Days = json["days"].toVariant().toStringList();
 	}
 };
+
+Q_DECLARE_METATYPE(Schedule)
 
 #endif

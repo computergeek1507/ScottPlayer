@@ -1,8 +1,10 @@
 #include "addschedule.h"
 
+#include "./players/Schedule.h"
+
 #include <QDate>
 
-AddSchedule::AddSchedule(QWidget* parent) :
+AddSchedule::AddSchedule(QWidget* parent):
 	ui(new Ui::AddScheduleDialog),
 	m_daysCheckBox(new QxtCheckComboBox())
 {
@@ -35,9 +37,31 @@ int AddSchedule::Load(QStringList const& playlists)
 	return this->exec();
 }
 
-void AddSchedule::SetData(QString const& playlist, QTime const& startTime, QTime const& endTime, QDate const& startDate, QDate const& endDate, QStringList const& days)
+int AddSchedule::LoadData(QStringList const& playlists, Schedule const& schedule)
 {
+	ui->cb_playlists->clear();
+	ui->cb_playlists->addItems(playlists);
 
+	if(-1 != ui->cb_playlists->findText(schedule.PlayListName))
+	{
+		ui->cb_playlists->setCurrentIndex(ui->cb_playlists->findText(schedule.PlayListName));
+	}
+	m_daysCheckBox->clearCheckedItems();
+	m_daysCheckBox->setCheckedItems(schedule.Days);
+
+	ui->te_startTime->setTime(schedule.StartTime);
+	ui->te_endTime->setTime(schedule.EndTime);
+	ui->de_startDate->setDate(schedule.StartDate);
+	ui->de_endDate->setDate(schedule.EndDate);
+
+	return this->exec();
+}
+
+Schedule AddSchedule::GetSchedule() const
+{
+	return Schedule(ui->cb_playlists->currentText(), 
+		ui->te_startTime->time(),ui->te_endTime->time(),
+		ui->de_startDate->date(),ui->de_endDate->date(),m_days);
 }
 
 void AddSchedule::ChangeDays(QStringList const& items)
@@ -47,6 +71,17 @@ void AddSchedule::ChangeDays(QStringList const& items)
 
 void AddSchedule::on_buttonBox_accepted()
 {
-	
+	if(ui->de_startDate->date() > ui->de_endDate->date())
+	{
+		return;
+	}
+	if(m_days.isEmpty())
+	{
+		return;
+	}
+	if(ui->cb_playlists->currentText().isEmpty())
+	{
+		return;
+	}
 	this->accept();
 }

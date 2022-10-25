@@ -168,6 +168,14 @@ void SequencePlayer::LoadOutputs(QString const& configPath)
 	}
 }
 
+void SequencePlayer::LoadSync(QString const& configPath)
+{
+	m_syncManager = std::make_unique<SyncManager>();
+	//connect(m_outputManager.get(), &OutputManager::AddController, this, &SequencePlayer::on_AddController);
+	//connect(m_outputManager.get(), &OutputManager::SetChannelCount, this, &SequencePlayer::setTotalChannels);
+	m_syncManager->LoadOutputs(configPath);
+}
+
 bool SequencePlayer::LoadSeqFile(QString const& sequencePath)
 {
 	m_seqFile = nullptr;

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>374</width>
-    <height>251</height>
+    <height>211</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -149,9 +149,16 @@
        <minute>0</minute>
        <second>0</second>
        <year>2099</year>
-       <month>1</month>
-       <day>1</day>
+       <month>12</month>
+       <day>31</day>
       </datetime>
+     </property>
+     <property name="date">
+      <date>
+       <year>2099</year>
+       <month>12</month>
+       <day>31</day>
+      </date>
      </property>
     </widget>
    </item>
