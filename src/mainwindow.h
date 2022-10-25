@@ -49,6 +49,7 @@ public Q_SLOTS:
     void on_pb_playSequence_clicked();
 
     void on_pb_addSchedule_clicked();
+    void on_pb_editSchedule_clicked();
     void on_pb_deleteSchedule_clicked();
     void on_pb_sch_moveUp_clicked();
     void on_pb_sch_moveDown_clicked();
@@ -59,6 +60,8 @@ public Q_SLOTS:
     void RedrawPlaylist(int index);
 
     void SelectSequence(int index);
+
+    void RedrawSchedule();
 
     void ClearListData();
     void UpdateStatus(QString const& message);

@@ -30,6 +30,7 @@ enum class SeqType
 enum class PlaybackStatus
 {
     Playing,
+    Loading,
     Stopped
 };
 
@@ -55,10 +56,10 @@ public Q_SLOTS:
     {
         channelsCount = channels;
     }
-
+    void MediaStatusChanged(QMediaPlayer::MediaStatus status);
     void TriggerOutputData();
-    void on_positionChanged(qint64 );
-    
+    void TriggerTimedOutputData(qint64 timeMS);
+   
 
 Q_SIGNALS:
     void UpdateSequence(QString const& sequenceName, QString const& media, int frames, int frameSizeMS);

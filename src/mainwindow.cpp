@@ -4,8 +4,11 @@
 
 #include "config.h"
 
+#include "AddSchedule.h"
+
 #include "./players/PlayList.h"
 #include "./players/PlayListItem.h"
+#include "./players/Schedule.h"
 
 #include <QMessageBox>
 #include <QDesktopServices>
@@ -78,6 +81,7 @@ MainWindow::MainWindow(QWidget* parent)
 	connect(m_playlists.get(), &PlayListManager::DisplayPlaylistSend, this, &MainWindow::RedrawPlaylist);
 	connect(m_playlists.get(), &PlayListManager::MessageSend, this, &MainWindow::UpdateStatus);
 	connect(m_playlists.get(), &PlayListManager::SelectSequenceSend, this, &MainWindow::SelectSequence);
+	connect(m_playlists.get(), &PlayListManager::DisplayScheduleSend, this, &MainWindow::RedrawSchedule);
 
 	auto lastfolder{ m_settings->value("last_folder").toString() };
 
@@ -86,6 +90,7 @@ MainWindow::MainWindow(QWidget* parent)
 		m_player->LoadConfigs(lastfolder);
 		m_playlists->LoadPlayLists(lastfolder);
 		m_showfolder = lastfolder;
+		RedrawSchedule();
 	}
 }
 
@@ -204,22 +209,31 @@ void MainWindow::on_pb_playSequence_clicked()
 
 void MainWindow::on_pb_addSchedule_clicked()
 {
+	AddSchedule pn(this);
+	if (pn.Load(m_playlists->GetPlayLists()))
+	{
+		m_playlists->AddSchedule(pn.GetPlayList(), pn.GetStartTime(), pn.GetEndTime(), pn.GetStartDate(), pn.GetEndDate(), pn.GetDays());
+	}
+}
+
+void MainWindow::on_pb_editSchedule_clicked()
+{
 
 }
 
 void MainWindow::on_pb_deleteSchedule_clicked()
 {
-
+	m_playlists->DeleteSchedule(m_ui->tw_schedules->currentRow());
 }
 
 void MainWindow::on_pb_sch_moveUp_clicked()
 {
-
+	m_playlists->MoveScheduleUp( m_ui->tw_schedules->currentRow());
 }
 
 void MainWindow::on_pb_sch_moveDown_clicked()
 {
-
+	m_playlists->MoveScheduleDown( m_ui->tw_schedules->currentRow());
 }
 
 void MainWindow::AddController_Received(QString const& type, QString const& ip, QString const& channel)
@@ -274,6 +288,32 @@ void MainWindow::RedrawPlaylist(int index)
 		}
 	}
 	m_ui->twPlaylists->resizeColumnsToContents();
+}
+
+void MainWindow::RedrawSchedule()
+{
+	m_ui->tw_schedules->clearContents();
+	auto SetItem = [&](int row, int col, QString const& text)
+	{
+		m_ui->tw_schedules->setItem(row, col, new QTableWidgetItem());
+		m_ui->tw_schedules->item(row, col)->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
+		m_ui->tw_schedules->item(row, col)->setText(text);
+		m_ui->tw_schedules->item(row, col)->setData(Qt::UserRole, row);
+	};
+	
+		m_ui->tw_schedules->setRowCount(static_cast<int>(m_playlists->GetSchedules().size()));
+		int row{ 0 };
+		for (auto const& shed : m_playlists->GetSchedules())
+		{
+
+			SetItem(row, 0, shed.PlayListName);
+			SetItem(row, 1, shed.StartTime.toString());
+			SetItem(row, 2, shed.EndTime.toString());
+			SetItem(row, 3, shed.Days.join(","));
+			++row;
+		}
+	
+	m_ui->tw_schedules->resizeColumnsToContents();
 }
 
 void MainWindow::ClearListData()

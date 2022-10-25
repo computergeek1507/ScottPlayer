@@ -183,7 +183,7 @@
           <item>
            <widget class="QPushButton" name="pb_addSchedule">
             <property name="text">
-             <string>Add Schedule</string>
+             <string>Add</string>
             </property>
             <property name="icon">
              <iconset resource="ScottPlayer.qrc">
@@ -192,9 +192,16 @@
            </widget>
           </item>
           <item>
+           <widget class="QPushButton" name="pb_editSchedule">
+            <property name="text">
+             <string>Edit</string>
+            </property>
+           </widget>
+          </item>
+          <item>
            <widget class="QPushButton" name="pb_deleteSchedule">
             <property name="text">
-             <string>Remove Schedule</string>
+             <string>Remove</string>
             </property>
             <property name="icon">
              <iconset resource="ScottPlayer.qrc">
@@ -301,7 +308,6 @@
      <string>Settings</string>
     </property>
     <addaction name="actionMultisync"/>
-    <addaction name="actionRDS"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuSettings"/>

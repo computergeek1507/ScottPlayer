@@ -46,9 +46,9 @@ bool QxtCheckComboBoxPrivate::eventFilter(QObject* receiver, QEvent* event)
     case QEvent::KeyRelease:
     {
         QKeyEvent* keyEvent = static_cast<QKeyEvent*>(event);
-        if (receiver == &q_func() && (keyEvent->key() == Qt::Key_Up || keyEvent->key() == Qt::Key_Down))
+        if (receiver == q_func() && (keyEvent->key() == Qt::Key_Up || keyEvent->key() == Qt::Key_Down))
         {
-            q_func().showPopup();
+            q_func()->showPopup();
             return true;
         }
         else if (keyEvent->key() == Qt::Key_Enter ||
@@ -56,13 +56,13 @@ bool QxtCheckComboBoxPrivate::eventFilter(QObject* receiver, QEvent* event)
                  keyEvent->key() == Qt::Key_Escape)
         {
             // it is important to call QComboBox implementation
-            q_func().QComboBox::hidePopup();
+            q_func()->QComboBox::hidePopup();
             if (keyEvent->key() != Qt::Key_Escape)
                 return true;
         }
     }
     case QEvent::MouseButtonPress:
-        containerMousePress = (receiver == q_func().view()->window());
+        containerMousePress = (receiver == q_func()->view()->window());
         break;
     case QEvent::MouseButtonRelease:
         containerMousePress = false;;
@@ -75,24 +75,24 @@ bool QxtCheckComboBoxPrivate::eventFilter(QObject* receiver, QEvent* event)
 
 void QxtCheckComboBoxPrivate::updateCheckedItems()
 {
-    QStringList items = q_func().checkedItems();
+    QStringList items = q_func()->checkedItems();
     if (items.isEmpty())
-        q_func().setEditText(defaultText);
+        q_func()->setEditText(defaultText);
     else
-        q_func().setEditText(items.join(separator));
+        q_func()->setEditText(items.join(separator));
 
     // TODO: find a way to recalculate a meaningful size hint
 
-    emit q_func().checkedItemsChanged(items);
+    emit q_func()->checkedItemsChanged(items);
 }
 
 void QxtCheckComboBoxPrivate::toggleCheckState(int index)
 {
-    QVariant value = q_func().itemData(index, Qt::CheckStateRole);
+    QVariant value = q_func()->itemData(index, Qt::CheckStateRole);
     if (value.isValid())
     {
         Qt::CheckState state = static_cast<Qt::CheckState>(value.toInt());
-        q_func().setItemData(index, (state == Qt::Unchecked ? Qt::Checked : Qt::Unchecked), Qt::CheckStateRole);
+        q_func()->setItemData(index, (state == Qt::Unchecked ? Qt::Checked : Qt::Unchecked), Qt::CheckStateRole);
     }
 }
 
@@ -158,10 +158,10 @@ QxtCheckComboBox::QxtCheckComboBox(QWidget* parent) : QComboBox(parent), d_ptr(n
 {
     //QXT_INIT_PRIVATE(QxtCheckComboBox);
     setModel(new QxtCheckComboModel(this));
-    connect(this, SIGNAL(activated(int)), &d_func(), SLOT(toggleCheckState(int)));
-    connect(model(), SIGNAL(checkStateChanged()), &d_func(), SLOT(updateCheckedItems()));
-    connect(model(), SIGNAL(rowsInserted(const QModelIndex &, int, int)), &d_func(), SLOT(updateCheckedItems()));
-    connect(model(), SIGNAL(rowsRemoved(const QModelIndex &, int, int)), &d_func(), SLOT(updateCheckedItems()));
+    connect(this, SIGNAL(activated(int)), d_func(), SLOT(toggleCheckState(int)));
+    connect(model(), SIGNAL(checkStateChanged()), d_func(), SLOT(updateCheckedItems()));
+    connect(model(), SIGNAL(rowsInserted(const QModelIndex &, int, int)), d_func(), SLOT(updateCheckedItems()));
+    connect(model(), SIGNAL(rowsRemoved(const QModelIndex &, int, int)), d_func(), SLOT(updateCheckedItems()));
 
     // read-only contents
     QLineEdit* lineEdit = new QLineEdit(this);
@@ -170,10 +170,10 @@ QxtCheckComboBox::QxtCheckComboBox(QWidget* parent) : QComboBox(parent), d_ptr(n
     lineEdit->disconnect(this);
     setInsertPolicy(QComboBox::NoInsert);
 
-    view()->installEventFilter(&d_func());
-    view()->window()->installEventFilter(&d_func());
-    view()->viewport()->installEventFilter(&d_func());
-    this->installEventFilter(&d_func());
+    view()->installEventFilter(d_func());
+    view()->window()->installEventFilter(d_func());
+    view()->viewport()->installEventFilter(d_func());
+    this->installEventFilter(d_func());
 }
 
 /*!
@@ -188,7 +188,7 @@ QxtCheckComboBox::~QxtCheckComboBox()
  */
 void QxtCheckComboBox::hidePopup()
 {
-    if (d_func().containerMousePress)
+    if (d_func()->containerMousePress)
         QComboBox::hidePopup();
 }
 
@@ -245,15 +245,15 @@ void QxtCheckComboBox::setCheckedItems(const QStringList& items)
  */
 QString QxtCheckComboBox::defaultText() const
 {
-    return d_func().defaultText;
+    return d_func()->defaultText;
 }
 
 void QxtCheckComboBox::setDefaultText(const QString& text)
 {
-    if (d_func().defaultText != text)
+    if (d_func()->defaultText != text)
     {
-        d_func().defaultText = text;
-        d_func().updateCheckedItems();
+        d_func()->defaultText = text;
+        d_func()->updateCheckedItems();
     }
 }
 
@@ -266,14 +266,14 @@ void QxtCheckComboBox::setDefaultText(const QString& text)
  */
 QString QxtCheckComboBox::separator() const
 {
-    return d_func().separator;
+    return d_func()->separator;
 }
 
 void QxtCheckComboBox::setSeparator(const QString& separator)
 {
-    if (d_func().separator != separator)
+    if (d_func()->separator != separator)
     {
-        d_func().separator = separator;
-        d_func().updateCheckedItems();
+        d_func()->separator = separator;
+        d_func()->updateCheckedItems();
     }
 }
