@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MultisyncDialog</class>
+ <widget class="QDialog" name="MultisyncDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>349</width>
+    <height>378</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Edit MultiSync</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="ScottPlayer.qrc">
+    <normaloff>:/ScottPlayer/ScottPlayer.png</normaloff>:/ScottPlayer/ScottPlayer.png</iconset>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout_2">
+   <item>
+    <widget class="QCheckBox" name="cb_multiSync">
+     <property name="text">
+      <string>Enable MultiSync</string>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QCheckBox" name="cb_Multicast">
+     <property name="text">
+      <string>Multicast MultiSync</string>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="groupBox">
+     <property name="title">
+      <string>Unicast MultiSync</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <item>
+       <widget class="QListWidget" name="listWidget"/>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pb_addIP">
+        <property name="text">
+         <string>Add IP Address</string>
+        </property>
+        <property name="icon">
+         <iconset resource="ScottPlayer.qrc">
+          <normaloff>:/ScottPlayer/icons/add.png</normaloff>:/ScottPlayer/icons/add.png</iconset>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pb_removeIP">
+        <property name="text">
+         <string>Remove IP Address</string>
+        </property>
+        <property name="icon">
+         <iconset resource="ScottPlayer.qrc">
+          <normaloff>:/ScottPlayer/icons/delete.png</normaloff>:/ScottPlayer/icons/delete.png</iconset>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources>
+  <include location="ScottPlayer.qrc"/>
+ </resources>
+ <connections>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>rejected()</signal>
+   <receiver>MultisyncDialog</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>316</x>
+     <y>260</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>286</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>
