@@ -4,7 +4,7 @@
 
 #include "config.h"
 
-#include "AddSchedule.h"
+#include "addschedule.h"
 
 #include "./players/PlayList.h"
 #include "./players/PlayListItem.h"

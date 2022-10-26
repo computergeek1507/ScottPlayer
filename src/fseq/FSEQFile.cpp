@@ -14,11 +14,13 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
+
+
+#ifdef _MSC_VER
 #define NOMINMAX
 #include <windows.h>
 #include <stdio.h>
 
-#ifdef _MSC_VER
 int gettimeofday(struct timeval * tp, struct timezone * tzp)
 {
     // Note: some broken versions only have 8 trailing zero's, the correct epoch has 9 trailing zero's

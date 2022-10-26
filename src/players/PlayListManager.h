@@ -11,6 +11,7 @@
 #include <QString>
 
 #include <memory>
+#include <optional>
 #include <vector>
 
 struct PlayList;
