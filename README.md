@@ -6,7 +6,6 @@ Only Supports Artnet, E131, and DDP Outputs. Supports v2 ZSTD, v2 Uncompressed, 
 
 #### TODO
  - Fix Schedules that loop around midnight
- - Add Multisync
  - Fix ZSTD dependency install issues
 
 #### Other Goals
