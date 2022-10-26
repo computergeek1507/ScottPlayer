@@ -59,6 +59,7 @@ public Q_SLOTS:
         channelsCount = channels;
     }
     void MediaStatusChanged(QMediaPlayer::MediaStatus status);
+    void MediaStateChanged(QMediaPlayer::State state);
     void TriggerOutputData();
     void TriggerTimedOutputData(qint64 timeMS);
 

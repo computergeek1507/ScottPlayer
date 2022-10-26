@@ -32,6 +32,7 @@ SequencePlayer::SequencePlayer():
 	m_mediaPlayer->setVolume(100);
 
 	connect(m_mediaPlayer.get(), &QMediaPlayer::mediaStatusChanged,	this, &SequencePlayer::MediaStatusChanged);
+	connect(m_mediaPlayer.get(), &QMediaPlayer::stateChanged,	this, &SequencePlayer::MediaStateChanged);
 
 	m_syncManager = std::make_unique<SyncManager>(this);
 }
@@ -102,16 +103,18 @@ void SequencePlayer::PlaySequence()
 
 void SequencePlayer::StopSequence()
 {
-	m_syncManager->SendStop();
 	m_playbackTimer->stop();
 	m_playbackThread.requestInterruption();
 	m_playbackThread.quit();
 	m_playbackThread.wait();
 
+
 	if(m_mediaPlayer->state() == QMediaPlayer::PlayingState)
 	{
 		m_mediaPlayer->stop();
 	}
+
+	m_syncManager->SendStop();
 
 	//stop timer
 	m_outputManager->CloseOutputs();
@@ -145,6 +148,10 @@ void SequencePlayer::TriggerOutputData()
 
 void SequencePlayer::TriggerTimedOutputData(qint64 timeMS)
 {
+	if(m_mediaPlayer->state() != QMediaPlayer::PlayingState)
+	{
+		return;
+	}
 	int64_t approxFrame = timeMS / m_seqStepTime;
 
 	if (approxFrame >= m_numberofFrame)
@@ -181,9 +188,7 @@ void SequencePlayer::LoadOutputs(QString const& configPath)
 
 void SequencePlayer::SendSync(qint64 frameIdx)
 {
-	m_syncManager->SendSync(m_seqStepTime,
-		m_seqStepTime * m_numberofFrame,
-		m_seqFileName, m_mediaName);
+	m_syncManager->SendSync(m_seqStepTime, frameIdx, m_seqFileName, m_mediaName);
 }
 
 bool SequencePlayer::LoadSeqFile(QString const& sequencePath)
@@ -280,6 +285,11 @@ void SequencePlayer::MediaStatusChanged(QMediaPlayer::MediaStatus status)
 	}
 	
 	m_logger->error("Media Status: {}", status);
+
+}
+
+void SequencePlayer::MediaStateChanged(QMediaPlayer::State state)
+{
 
 }
 
