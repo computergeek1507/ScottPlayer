@@ -29,7 +29,7 @@ jobs:
         setup-python: 'false'
 
     - name: Configure CMake
-      run: CXX=g++-11 CC=gcc-11 cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+      run: CXX=g++-10 CC=gcc-10 cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
 
     - name: Build
-      run: CXX=g++-11 CC=gcc-11 cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+      run: CXX=g++-10 CC=gcc-10 cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
