@@ -24,7 +24,7 @@ public:
     void CloseOutputs();
 
     void SendStop();
-    void SendSync(uint32_t frameMS, uint32_t stepLengthMS, uint32_t stepMS, QString const& fseq, QString const& media);
+    void SendSync(uint32_t frameMS, uint32_t stepMS, QString const& fseq, QString const& media);
 
     bool IsEnabled() const { return m_enabled; }
     void SetEnabled(bool enable) 
@@ -44,7 +44,7 @@ private:
     size_t m_lastmediamsec { 0 };
     //QStringList m_unicast;
     QHostAddress m_groupAddress;
-    std::unique_ptr<QUdpSocket> m_UdpSocket;
+    std::unique_ptr<QUdpSocket> m_UdpSocket{ nullptr };
     std::shared_ptr<spdlog::logger> m_logger{ nullptr };
 };
 

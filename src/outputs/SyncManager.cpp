@@ -20,7 +20,7 @@ QObject(parent),
 
 SyncManager::~SyncManager()
 {
-    if (!m_UdpSocket && m_UdpSocket->state() == QAbstractSocket::BoundState)
+    if (m_UdpSocket && m_UdpSocket->state() == QAbstractSocket::BoundState)
     {
         m_UdpSocket->close();
     }
@@ -49,7 +49,7 @@ void SyncManager::CloseOutputs()
 
 }
 
-void SyncManager::SendSync(uint32_t frameMS, uint32_t stepLengthMS, uint32_t stepMS, QString const& fseq, QString const& media)
+void SyncManager::SendSync(uint32_t frameMS, uint32_t stepMS, QString const& fseq, QString const& media)
 {
     if (!m_enabled)
     {
@@ -167,7 +167,7 @@ void SyncManager::SendSync(uint32_t frameMS, uint32_t stepLengthMS, uint32_t ste
 
 void SyncManager::SendStop()
 {
-    SendSync(50, 0, 0xFFFFFFFF, "", "");
+    SendSync(50, 0xFFFFFFFF, "", "");
 }
 
 void SyncManager::SendFPPSync(const QString& item, uint32_t stepMS, uint32_t frameMS)

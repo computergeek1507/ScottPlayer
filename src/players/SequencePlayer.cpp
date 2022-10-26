@@ -183,7 +183,6 @@ void SequencePlayer::SendSync(qint64 frameIdx)
 {
 	m_syncManager->SendSync(m_seqStepTime,
 		m_seqStepTime * m_numberofFrame,
-		m_seqStepTime * frameIdx,
 		m_seqFileName, m_mediaName);
 }
 
