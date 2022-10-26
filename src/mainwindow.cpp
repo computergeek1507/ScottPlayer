@@ -97,6 +97,10 @@ MainWindow::MainWindow(QWidget* parent)
 		m_showfolder = lastfolder;
 		RedrawSchedule();
 	}
+
+	bool enabled = m_settings->value("multisync", "true").toBool();
+	m_player->SetMultisync(enabled);
+	m_ui->actionMultisync->setChecked(enabled);
 }
 
 MainWindow::~MainWindow()
@@ -144,7 +148,10 @@ void MainWindow::on_actionClose_triggered()
 
 void MainWindow::on_actionMultisync_triggered()
 {
-
+	bool enabled = m_ui->actionMultisync->isChecked();
+	m_player->SetMultisync(enabled);
+	m_settings->setValue("multisync", enabled);
+	m_settings->sync();
 }
 
 void MainWindow::on_actionAbout_triggered()
@@ -199,22 +206,22 @@ void MainWindow::on_pb_addSequence_clicked()
 
 void MainWindow::on_pb_removeSequence_clicked()
 {
-	m_playlists->DeleteSequence(m_ui->cb_playlists->currentData().toInt(), m_ui->twPlaylists->currentRow());
+	m_playlists->DeleteSequence(m_ui->cb_playlists->currentData().toInt(), m_ui->tw_playlists->currentRow());
 }
 
 void MainWindow::on_pb_moveUp_clicked()
 {
-	m_playlists->MoveSequenceUp(m_ui->cb_playlists->currentData().toInt(), m_ui->twPlaylists->currentRow());
+	m_playlists->MoveSequenceUp(m_ui->cb_playlists->currentData().toInt(), m_ui->tw_playlists->currentRow());
 }
 
 void MainWindow::on_pb_moveDown_clicked()
 {
-	m_playlists->MoveSequenceDown(m_ui->cb_playlists->currentData().toInt(), m_ui->twPlaylists->currentRow());
+	m_playlists->MoveSequenceDown(m_ui->cb_playlists->currentData().toInt(), m_ui->tw_playlists->currentRow());
 }
 
 void MainWindow::on_pb_playSequence_clicked()
 {
-	m_playlists->PlaySequence(m_ui->cb_playlists->currentData().toInt(),m_ui->twPlaylists->currentRow());
+	m_playlists->PlaySequence(m_ui->cb_playlists->currentData().toInt(),m_ui->tw_playlists->currentRow());
 }
 
 void MainWindow::on_pb_addSchedule_clicked()
@@ -255,27 +262,48 @@ void MainWindow::on_pb_sch_moveDown_clicked()
 	m_playlists->MoveScheduleDown( m_ui->tw_schedules->currentRow());
 }
 
+void MainWindow::on_tw_playlists_cellDoubleClicked(int row, int column) 
+{
+	m_playlists->PlaySequence(m_ui->cb_playlists->currentData().toInt(), row);
+}
+
+void MainWindow::on_tw_schedules_cellDoubleClicked(int row, int column)
+{
+	AddSchedule pn(this);
+	if (pn.LoadData(m_playlists->GetPlayLists(), m_playlists->GetSchedules().at(row)))
+	{
+		m_playlists->EditSchedule(row, pn.GetSchedule());
+	}
+}
+
+void MainWindow::on_tw_controllers_cellDoubleClicked(int row, int column)
+{
+	auto ip = m_ui->tw_controllers->item(row, std::to_underlying(ControllerColumn::Address))->text();
+
+	QDesktopServices::openUrl(QUrl("http://" + ip));
+}
+
 void MainWindow::AddController_Received(bool enabled, QString const& type, QString const& ip, QString const& channel)
 {
 	auto SetItem = [&](int row, ControllerColumn col, QString const& text)
 	{
-		m_ui->twControllers->setItem(row, std::to_underlying(col), new QTableWidgetItem());
-		m_ui->twControllers->item(row, std::to_underlying(col))->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
-		m_ui->twControllers->item(row, std::to_underlying(col))->setText(text);
+		m_ui->tw_controllers->setItem(row, std::to_underlying(col), new QTableWidgetItem());
+		m_ui->tw_controllers->item(row, std::to_underlying(col))->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
+		m_ui->tw_controllers->item(row, std::to_underlying(col))->setText(text);
 	};
 
-	int row = m_ui->twControllers->rowCount();
-	m_ui->twControllers->insertRow(row);
+	int row = m_ui->tw_controllers->rowCount();
+	m_ui->tw_controllers->insertRow(row);
 	SetItem(row, ControllerColumn::Enabled, enabled ? "true" : "false");
 	SetItem(row, ControllerColumn::Type, type);
 	SetItem(row, ControllerColumn::Address, ip);
 	SetItem(row, ControllerColumn::Channels, channel);
-	m_ui->twControllers->resizeColumnsToContents();
+	m_ui->tw_controllers->resizeColumnsToContents();
 }
 
 void MainWindow::SelectSequence(int index) 
 {
-	m_ui->twPlaylists->selectRow(index);
+	m_ui->tw_playlists->selectRow(index);
 }
 
 void MainWindow::on_cb_playlists_currentIndexChanged( int index )
@@ -285,19 +313,19 @@ void MainWindow::on_cb_playlists_currentIndexChanged( int index )
 
 void MainWindow::RedrawPlaylist(int index)
 {
-	m_ui->twPlaylists->clearContents();
+	m_ui->tw_playlists->clearContents();
 	auto SetItem = [&](int row, PlaylistColumn col, QString const& text)
 	{
-		m_ui->twPlaylists->setItem(row, std::to_underlying(col), new QTableWidgetItem());
-		m_ui->twPlaylists->item(row, std::to_underlying(col))->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
-		m_ui->twPlaylists->item(row, std::to_underlying(col))->setText(text);
-		m_ui->twPlaylists->item(row, std::to_underlying(col))->setData(Qt::UserRole, row);
+		m_ui->tw_playlists->setItem(row, std::to_underlying(col), new QTableWidgetItem());
+		m_ui->tw_playlists->item(row, std::to_underlying(col))->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
+		m_ui->tw_playlists->item(row, std::to_underlying(col))->setText(text);
+		m_ui->tw_playlists->item(row, std::to_underlying(col))->setData(Qt::UserRole, row);
 	};
 	if(auto const& playlistRef = m_playlists->GetPlayList(index); playlistRef)
 	{
 		auto const& playlist = playlistRef->get();
 
-		m_ui->twPlaylists->setRowCount(static_cast<int>(playlist.PlayListItems.size()));
+		m_ui->tw_playlists->setRowCount(static_cast<int>(playlist.PlayListItems.size()));
 		int row{ 0 };
 		for(auto const& item : playlist.PlayListItems)
 		{
@@ -307,7 +335,7 @@ void MainWindow::RedrawPlaylist(int index)
 			++row;
 		}
 	}
-	m_ui->twPlaylists->resizeColumnsToContents();
+	m_ui->tw_playlists->resizeColumnsToContents();
 }
 
 void MainWindow::RedrawSchedule()
@@ -340,9 +368,9 @@ void MainWindow::RedrawSchedule()
 
 void MainWindow::ClearListData()
 {
-	while (m_ui->twControllers->rowCount() != 0)
+	while (m_ui->tw_controllers->rowCount() != 0)
 	{
-		m_ui->twControllers->removeRow(0);
+		m_ui->tw_controllers->removeRow(0);
 	}
 }
 

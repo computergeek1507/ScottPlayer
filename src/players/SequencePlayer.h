@@ -49,7 +49,7 @@ public Q_SLOTS:
 
     void StopSequence();
     void LoadOutputs(QString const& configPath);
-    void LoadSync(QString const& configPath);
+    void SendSync(qint64 frameIdx);
     void on_AddController(bool enabled, QString const& type, QString const& ip, QString const& channels)
     {
         emit AddController(enabled, type, ip, channels);
@@ -61,7 +61,8 @@ public Q_SLOTS:
     void MediaStatusChanged(QMediaPlayer::MediaStatus status);
     void TriggerOutputData();
     void TriggerTimedOutputData(qint64 timeMS);
-   
+
+    void SetMultisync(bool enabled);  
 
 Q_SIGNALS:
     void UpdateSequence(QString const& sequenceName, QString const& media, int frames, int frameSizeMS);
@@ -80,6 +81,7 @@ private:
 
     QString m_seqFileName;
     QString m_mediaFile;
+    QString m_mediaName;
     FSEQFile* m_seqFile{nullptr};
     //std::chrono::time_point<std::chrono::high_resolution_clock> m_seqMSElapsed;
     int m_seqMSDuration{0};

@@ -56,6 +56,10 @@ public Q_SLOTS:
     void on_pb_sch_moveUp_clicked();
     void on_pb_sch_moveDown_clicked();
 
+    void on_tw_playlists_cellDoubleClicked(int row, int column);
+    void on_tw_schedules_cellDoubleClicked(int row, int column);
+    void on_tw_controllers_cellDoubleClicked(int row, int column);
+
     void on_cb_playlists_currentIndexChanged( int index );
     
     void AddController_Received(bool, QString const&, QString const&, QString const&);

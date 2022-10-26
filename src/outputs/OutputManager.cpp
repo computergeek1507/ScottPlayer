@@ -55,9 +55,10 @@ bool OutputManager::LoadOutputs(QString const& outputConfig)
 	uint64_t startChannel{ 1 };
 	QString const Type = rootXML.tagName();
 	QString const proxy = rootXML.attribute("GlobalFPPProxy", "");
-	bool const active = rootXML.attribute("ActiveState", "Active") == "Active";
+	
 	for (QDomElement controllerXML = rootXML.firstChildElement("Controller"); !controllerXML.isNull(); controllerXML = controllerXML.nextSiblingElement("Controller"))
 	{
+		bool const active = controllerXML.attribute("ActiveState", "Active") == "Active";
 		for (QDomElement networkXML = controllerXML.firstChildElement("network"); !networkXML.isNull(); networkXML = networkXML.nextSiblingElement("network"))
 		{
 			QString const nType = networkXML.attribute("NetworkType", "");

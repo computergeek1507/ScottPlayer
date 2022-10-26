@@ -32,6 +32,8 @@ SequencePlayer::SequencePlayer():
 	m_mediaPlayer->setVolume(100);
 
 	connect(m_mediaPlayer.get(), &QMediaPlayer::mediaStatusChanged,	this, &SequencePlayer::MediaStatusChanged);
+
+	m_syncManager = std::make_unique<SyncManager>(this);
 }
 
 SequencePlayer::~SequencePlayer()
@@ -66,6 +68,8 @@ void SequencePlayer::LoadSequence(QString const& sequencePath, QString const& me
 	if(!mediaPath.isEmpty())
 	{
 		m_mediaFile = mediaPath;
+		QFileInfo mediaInfo(mediaPath);
+		m_mediaName = mediaInfo.fileName();
 	}
 
 	if(!m_mediaFile.isEmpty() && QFile::exists(m_mediaFile))
@@ -82,6 +86,7 @@ void SequencePlayer::LoadSequence(QString const& sequencePath, QString const& me
 void SequencePlayer::PlaySequence()
 {
 	m_outputManager->OpenOutputs();
+	m_syncManager->OpenOutputs();
 	//start timer
 	m_lastFrameRead = 0;
 	m_lastFrameData = m_seqFile->getFrame(m_lastFrameRead);
@@ -97,6 +102,7 @@ void SequencePlayer::PlaySequence()
 
 void SequencePlayer::StopSequence()
 {
+	m_syncManager->SendStop();
 	m_playbackTimer->stop();
 	m_playbackThread.requestInterruption();
 	m_playbackThread.quit();
@@ -109,6 +115,7 @@ void SequencePlayer::StopSequence()
 
 	//stop timer
 	m_outputManager->CloseOutputs();
+	m_syncManager->CloseOutputs();
 	//emit UpdateStatus("Sequence Ended " + m_seqFileName);
 	emit UpdatePlaybackStatus("", PlaybackStatus::Stopped);
 }
@@ -120,6 +127,7 @@ void SequencePlayer::TriggerOutputData()
 	//qDebug() << "O:" << timeMS << "ms";
 	m_lastFrameData->readFrame((uint8_t*)m_seqData, FPPD_MAX_CHANNELS);
 	m_outputManager->OutputData((uint8_t*)m_seqData);
+	SendSync(m_lastFrameRead);
 	m_lastFrameRead++;
 
 	if((m_lastFrameRead * m_seqStepTime) % 1000 == 0)
@@ -139,21 +147,24 @@ void SequencePlayer::TriggerTimedOutputData(qint64 timeMS)
 {
 	int64_t approxFrame = timeMS / m_seqStepTime;
 
-	//qDebug() << "O:" << timeMS << "ms";
-	m_lastFrameData = m_seqFile->getFrame(approxFrame);
-	m_lastFrameData->readFrame((uint8_t*)m_seqData, FPPD_MAX_CHANNELS);
-	m_outputManager->OutputData((uint8_t*)m_seqData);
-	
-	if ((approxFrame * m_seqStepTime) % 1000 == 0)
-	{
-		emit UpdateTime(m_seqFileName, approxFrame * m_seqStepTime, m_seqMSDuration);
-	}
-
 	if (approxFrame >= m_numberofFrame)
 	{
 		StopSequence();
 		return;
 	}
+
+	//qDebug() << "O:" << timeMS << "ms";
+	m_lastFrameData = m_seqFile->getFrame(approxFrame);
+	m_lastFrameData->readFrame((uint8_t*)m_seqData, FPPD_MAX_CHANNELS);
+	m_outputManager->OutputData((uint8_t*)m_seqData);
+	
+	SendSync(approxFrame);
+	if ((approxFrame * m_seqStepTime) % 1000 == 0)
+	{
+		emit UpdateTime(m_seqFileName, approxFrame * m_seqStepTime, m_seqMSDuration);
+	}
+
+	
 	//m_lastFrameData = m_seqFile->getFrame(m_lastFrameRead);
 }
 
@@ -168,12 +179,12 @@ void SequencePlayer::LoadOutputs(QString const& configPath)
 	}
 }
 
-void SequencePlayer::LoadSync(QString const& configPath)
+void SequencePlayer::SendSync(qint64 frameIdx)
 {
-	m_syncManager = std::make_unique<SyncManager>();
-	//connect(m_outputManager.get(), &OutputManager::AddController, this, &SequencePlayer::on_AddController);
-	//connect(m_outputManager.get(), &OutputManager::SetChannelCount, this, &SequencePlayer::setTotalChannels);
-	m_syncManager->LoadOutputs(configPath);
+	m_syncManager->SendSync(m_seqStepTime,
+		m_seqStepTime * m_numberofFrame,
+		m_seqStepTime * frameIdx,
+		m_seqFileName, m_mediaName);
 }
 
 bool SequencePlayer::LoadSeqFile(QString const& sequencePath)
@@ -271,4 +282,9 @@ void SequencePlayer::MediaStatusChanged(QMediaPlayer::MediaStatus status)
 	
 	m_logger->error("Media Status: {}", status);
 
+}
+
+void SequencePlayer::SetMultisync(bool enabled)
+{
+	m_syncManager->SetEnabled(enabled);
 }
