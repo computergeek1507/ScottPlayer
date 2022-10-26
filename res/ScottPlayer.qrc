@@ -1,5 +1,13 @@
 <RCC>
   <qresource prefix="ScottPlayer">
+    <file>icons/arrow_down.png</file>
+    <file>icons/arrow_up.png</file>
+    <file>icons/control_stop_blue.png</file>
+    <file>icons/control_play_blue.png</file>
+    <file>icons/bullet_delete.png</file>
+    <file>icons/bullet_arrow_up.png</file>
+    <file>icons/bullet_arrow_down.png</file>
+    <file>icons/bullet_add.png</file>
     <file>ScottPlayer.png</file>
     <file>icons/book_open.png</file>
     <file>icons/accept.png</file>

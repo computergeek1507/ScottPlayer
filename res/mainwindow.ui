@@ -49,12 +49,20 @@
             <property name="text">
              <string>Add PlayList</string>
             </property>
+            <property name="icon">
+             <iconset resource="ScottPlayer.qrc">
+              <normaloff>:/ScottPlayer/icons/add.png</normaloff>:/ScottPlayer/icons/add.png</iconset>
+            </property>
            </widget>
           </item>
           <item>
            <widget class="QPushButton" name="pb_deletePlaylist">
             <property name="text">
              <string>Delete Playlist</string>
+            </property>
+            <property name="icon">
+             <iconset resource="ScottPlayer.qrc">
+              <normaloff>:/ScottPlayer/icons/delete.png</normaloff>:/ScottPlayer/icons/delete.png</iconset>
             </property>
            </widget>
           </item>
@@ -96,7 +104,7 @@
             </property>
             <property name="icon">
              <iconset resource="ScottPlayer.qrc">
-              <normaloff>:/ScottPlayer/icons/add.png</normaloff>:/ScottPlayer/icons/add.png</iconset>
+              <normaloff>:/ScottPlayer/icons/bullet_add.png</normaloff>:/ScottPlayer/icons/bullet_add.png</iconset>
             </property>
            </widget>
           </item>
@@ -107,7 +115,7 @@
             </property>
             <property name="icon">
              <iconset resource="ScottPlayer.qrc">
-              <normaloff>:/ScottPlayer/icons/delete.png</normaloff>:/ScottPlayer/icons/delete.png</iconset>
+              <normaloff>:/ScottPlayer/icons/bullet_delete.png</normaloff>:/ScottPlayer/icons/bullet_delete.png</iconset>
             </property>
            </widget>
           </item>
@@ -116,6 +124,10 @@
             <property name="text">
              <string>Move Up</string>
             </property>
+            <property name="icon">
+             <iconset resource="ScottPlayer.qrc">
+              <normaloff>:/ScottPlayer/icons/bullet_arrow_up.png</normaloff>:/ScottPlayer/icons/bullet_arrow_up.png</iconset>
+            </property>
            </widget>
           </item>
           <item>
@@ -123,12 +135,20 @@
             <property name="text">
              <string>Move Down</string>
             </property>
+            <property name="icon">
+             <iconset resource="ScottPlayer.qrc">
+              <normaloff>:/ScottPlayer/icons/bullet_arrow_down.png</normaloff>:/ScottPlayer/icons/bullet_arrow_down.png</iconset>
+            </property>
            </widget>
           </item>
           <item>
            <widget class="QPushButton" name="pb_playSequence">
             <property name="text">
              <string>Play Sequence</string>
+            </property>
+            <property name="icon">
+             <iconset resource="ScottPlayer.qrc">
+              <normaloff>:/ScottPlayer/icons/control_play_blue.png</normaloff>:/ScottPlayer/icons/control_play_blue.png</iconset>
             </property>
            </widget>
           </item>
@@ -206,6 +226,10 @@
             <property name="text">
              <string>Edit</string>
             </property>
+            <property name="icon">
+             <iconset resource="ScottPlayer.qrc">
+              <normaloff>:/ScottPlayer/icons/cog.png</normaloff>:/ScottPlayer/icons/cog.png</iconset>
+            </property>
            </widget>
           </item>
           <item>
@@ -224,12 +248,20 @@
             <property name="text">
              <string>Move Up</string>
             </property>
+            <property name="icon">
+             <iconset resource="ScottPlayer.qrc">
+              <normaloff>:/ScottPlayer/icons/arrow_up.png</normaloff>:/ScottPlayer/icons/arrow_up.png</iconset>
+            </property>
            </widget>
           </item>
           <item>
            <widget class="QPushButton" name="pb_sch_moveDown">
             <property name="text">
              <string>Move Down</string>
+            </property>
+            <property name="icon">
+             <iconset resource="ScottPlayer.qrc">
+              <normaloff>:/ScottPlayer/icons/arrow_down.png</normaloff>:/ScottPlayer/icons/arrow_down.png</iconset>
             </property>
            </widget>
           </item>
@@ -298,7 +330,7 @@
      <x>0</x>
      <y>0</y>
      <width>1046</width>
-     <height>26</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -482,6 +514,10 @@
    </property>
   </action>
   <action name="actionStop_Sequence">
+   <property name="icon">
+    <iconset resource="ScottPlayer.qrc">
+     <normaloff>:/ScottPlayer/icons/control_stop_blue.png</normaloff>:/ScottPlayer/icons/control_stop_blue.png</iconset>
+   </property>
    <property name="text">
     <string>Stop Sequence</string>
    </property>
