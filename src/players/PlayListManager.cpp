@@ -352,6 +352,11 @@ void PlayListManager::PlayNextSequence()
 	if (auto const& playlistRef = GetPlayList(m_currentPlaylist); playlistRef)
 	{
 		auto const& playlist = playlistRef->get();
+		if(playlist.PlayListItems.size() == 0)
+		{
+			m_logger->warn("Playlist is empty: {}", m_currentPlaylist.toStdString());
+			return;
+		}
 
 		emit PlaySequenceSend(playlist.PlayListItems[m_nextSequenceIdx].SequenceFile,
 			playlist.PlayListItems[m_nextSequenceIdx].MediaFile);
@@ -368,6 +373,11 @@ void PlayListManager::PlayNewPlaylist(QString const& playlistName)
 	if (auto const& playlistRef = GetPlayList(playlistName); playlistRef)
 	{
 		auto const& playlist = playlistRef->get();
+		if(playlist.PlayListItems.size() == 0)
+		{
+			m_logger->warn("Playlist is empty: {}", playlistName.toStdString());
+			return;
+		}
 		m_nextSequenceIdx = 0;
 		m_currentPlaylist = playlistName;
 

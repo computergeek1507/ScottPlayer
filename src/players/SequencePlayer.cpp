@@ -255,7 +255,7 @@ void SequencePlayer::StartMusicSeq()
 	//
 	if (m_mediaPlayer->mediaStatus() != QMediaPlayer::LoadedMedia)
 	{
-		m_logger->error("Unable to Load media file{}: {}", m_mediaPlayer->mediaStatus(), m_mediaFile.toStdString());
+		m_logger->error("Unable to Load media file{}: {}", static_cast<int>(m_mediaPlayer->mediaStatus()), m_mediaFile.toStdString());
 		emit UpdatePlaybackStatus("", PlaybackStatus::Stopped);
 		return;
 	}
@@ -284,7 +284,7 @@ void SequencePlayer::MediaStatusChanged(QMediaPlayer::MediaStatus status)
 		emit UpdatePlaybackStatus("", PlaybackStatus::Stopped);
 	}
 	
-	m_logger->error("Media Status: {}", status);
+	m_logger->error("Media Status: {}", static_cast<int>(status));
 
 }
 
