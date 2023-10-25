@@ -44,3 +44,14 @@ jobs:
       with:
         name: ScottPlayer
         path: 'res\installer\output\**'
+
+    - name: Create prerelease
+      if: github.ref == 'refs/heads/main'
+      uses: marvinpinto/action-automatic-releases@latest
+      with:
+        repo_token: "${{ secrets.GITHUB_TOKEN }}"
+        prerelease: true
+        automatic_release_tag: "ci_win"
+        title: "${{ steps.version.outputs.version }}"
+        files: |        
+          ./res/installer/output/*.exe
