@@ -83,6 +83,7 @@ private:
     QString m_seqFileName;
     QString m_mediaFile;
     QString m_mediaName;
+    QString m_configFolder;
     FSEQFile* m_seqFile{nullptr};
     //std::chrono::time_point<std::chrono::high_resolution_clock> m_seqMSElapsed;
     int m_seqMSDuration{0};

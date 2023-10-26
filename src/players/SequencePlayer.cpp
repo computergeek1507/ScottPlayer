@@ -49,6 +49,7 @@ SequencePlayer::~SequencePlayer()
 
 void SequencePlayer::LoadConfigs(QString const& configPath)
 {
+	m_configFolder = configPath;
 	LoadOutputs(configPath + QDir::separator() + "xlights_networks.xml");
 }
 
@@ -79,6 +80,15 @@ void SequencePlayer::LoadSequence(QString const& sequencePath, QString const& me
 			{
 				m_logger->warn("Media File Found: {}", newPath.toStdString());
 				m_mediaFile = newPath;
+			}
+			else
+			{
+				auto newConfigPath = m_configFolder + QDir::separator() + mediaInfo.fileName();
+				if(QFile::exists(newConfigPath))
+				{
+					m_logger->warn("Media File Found: {}", newConfigPath.toStdString());
+					m_mediaFile = newConfigPath;
+				}
 			}
 		}
 		else
