@@ -325,6 +325,10 @@ void PlayListManager::CheckSchedule()
 
 	for (auto const& schedule : m_schedules)
 	{
+		if (!schedule.Enabled)
+		{
+			continue;
+		}
 		if (current.date() < schedule.StartDate || current.date() > schedule.EndDate)
 		{
 			continue;

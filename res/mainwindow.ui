@@ -206,6 +206,11 @@
             <string>Days</string>
            </property>
           </column>
+          <column>
+           <property name="text">
+            <string>Enabled</string>
+           </property>
+          </column>
          </widget>
         </item>
         <item>
@@ -330,7 +335,7 @@
      <x>0</x>
      <y>0</y>
      <width>1046</width>
-     <height>21</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">

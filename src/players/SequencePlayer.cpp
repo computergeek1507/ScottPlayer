@@ -68,14 +68,38 @@ void SequencePlayer::LoadSequence(QString const& sequencePath, QString const& me
 
 	if(!mediaPath.isEmpty())
 	{
-		m_mediaFile = mediaPath;
 		QFileInfo mediaInfo(mediaPath);
+		if(!QFile::exists(mediaPath))
+		{
+			m_logger->warn("Media not in original Location, Looking for Media File: {}", mediaPath.toStdString());
+			QDir d = seqInfo.absoluteDir();
+			QString absolute = d.absolutePath();
+			auto newPath = absolute + QDir::separator() + mediaInfo.fileName();
+			if(QFile::exists(newPath))
+			{
+				m_logger->warn("Media File Found: {}", newPath.toStdString());
+				m_mediaFile = newPath;
+			}
+		}
+		else
+		{
+			m_mediaFile = mediaPath;
+		}
+		
 		m_mediaName = mediaInfo.fileName();
 	}
-
-	if(!m_mediaFile.isEmpty() && QFile::exists(m_mediaFile))
+	
+	if(!m_mediaFile.isEmpty())
 	{
-		m_seqType = SeqType::Music;
+		if(!QFile::exists(m_mediaFile))
+		{
+			m_logger->error("Media File Not Found : {}", mediaPath.toStdString());
+			m_seqType = SeqType::Animation;
+		}
+		else
+		{
+			m_seqType = SeqType::Music;
+		}
 	}
 	else
 	{

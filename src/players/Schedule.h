@@ -15,6 +15,7 @@ struct Schedule
 	QDate StartDate;
 	QDate EndDate;
 	QStringList Days;
+	bool Enabled {true};
 
 	Schedule() = default;
 	~Schedule() = default;
@@ -22,11 +23,9 @@ struct Schedule
 	Schedule(const Schedule &) = default;
     Schedule &operator=(const Schedule &) = default;
 
-	Schedule(QString const& playlist, QTime const& startTime, QTime const& endTime, QDate const& startDate, QDate const& endDate, QStringList const& days ) :
-		PlayListName(playlist), StartTime(startTime), EndTime(endTime), StartDate(startDate), EndDate(endDate), Days(days)
-	{
-
-	}
+	Schedule(QString const& playlist, QTime const& startTime, QTime const& endTime, QDate const& startDate, QDate const& endDate, QStringList const& days, bool enabled ) :
+		PlayListName(playlist), StartTime(startTime), EndTime(endTime), StartDate(startDate), EndDate(endDate), Days(days), Enabled(enabled)
+	{ }
 
 	Schedule(QJsonObject const& json)
 	{
@@ -42,6 +41,7 @@ struct Schedule
 		json["startDate"] = QJsonValue::fromVariant(StartDate);
 		json["endDate"] = QJsonValue::fromVariant(EndDate);
 		json["days"] = QJsonValue::fromVariant(Days);
+		json["enabled"] = Enabled;
 	}
 
 	void read(const QJsonObject& json)
@@ -53,6 +53,10 @@ struct Schedule
 		StartDate = json["startDate"].toVariant().toDate();
 		EndDate = json["endDate"].toVariant().toDate();
 		Days = json["days"].toVariant().toStringList();
+		if(json.contains("enabled"))
+		{	
+			Enabled = json["enabled"].toBool();
+		}
 	}
 };
 

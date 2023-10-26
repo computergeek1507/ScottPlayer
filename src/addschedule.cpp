@@ -53,7 +53,7 @@ int AddSchedule::LoadData(QStringList const& playlists, Schedule const& schedule
 	ui->te_endTime->setTime(schedule.EndTime);
 	ui->de_startDate->setDate(schedule.StartDate);
 	ui->de_endDate->setDate(schedule.EndDate);
-
+	ui->cb_enabled->setChecked(schedule.Enabled);
 	return this->exec();
 }
 
@@ -61,7 +61,8 @@ Schedule AddSchedule::GetSchedule() const
 {
 	return Schedule(ui->cb_playlists->currentText(), 
 		ui->te_startTime->time(),ui->te_endTime->time(),
-		ui->de_startDate->date(),ui->de_endDate->date(),m_days);
+		ui->de_startDate->date(),ui->de_endDate->date(),
+		m_days,ui->cb_enabled->isChecked());
 }
 
 void AddSchedule::ChangeDays(QStringList const& items)

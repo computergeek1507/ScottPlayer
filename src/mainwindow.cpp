@@ -36,7 +36,7 @@
 #include <utility>
 
 enum class PlaylistColumn: int { SeqFile=0, MediaFile };
-enum class ScheduleColumn: int { Playlist=0, StartTime, EndTime, StartDate, EndDate, Days };
+enum class ScheduleColumn: int { Playlist=0, StartTime, EndTime, StartDate, EndDate, Days, Enabled };
 enum class ControllerColumn: int { Type=0, Address, Channels, Enabled };
 
 MainWindow::MainWindow(QWidget* parent)
@@ -353,13 +353,13 @@ void MainWindow::RedrawSchedule()
 		int row{ 0 };
 		for (auto const& shed : m_playlists->GetSchedules())
 		{
-
 			SetItem(row, ScheduleColumn::Playlist, shed.PlayListName);
 			SetItem(row, ScheduleColumn::StartTime, shed.StartTime.toString());
 			SetItem(row, ScheduleColumn::EndTime, shed.EndTime.toString());
 			SetItem(row, ScheduleColumn::StartDate, shed.StartDate.toString());
 			SetItem(row, ScheduleColumn::EndDate, shed.EndDate.toString());
 			SetItem(row, ScheduleColumn::Days, shed.Days.join(","));
+			SetItem(row, ScheduleColumn::Enabled, shed.Enabled ? "true" : "false");
 			++row;
 		}
 	
