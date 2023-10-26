@@ -41,7 +41,7 @@ jobs:
       run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
     - name: List files in the repository
       run: |
-          ls ${{ github.workspace }}/build
+          ls ${{ github.workspace }}/build/ScottPlayer.app -1
       
     - name: Build DMG
       run: create-dmg ScottPlayer.dmg ./build/ScottPlayer.app
