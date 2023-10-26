@@ -122,7 +122,7 @@ if(QT_VERSION_MAJOR EQUAL 6)
             execute_process(
             COMMAND ${qt_root}/bin/macdeployqt
             ${CMAKE_INSTALL_PREFIX}/build/${PROJECT_NAME}.app
-            -qmldir=${qt_root}/qml
+            -dmg
         )
     endif()
 endif()
