@@ -118,9 +118,10 @@ if(QT_VERSION_MAJOR EQUAL 6)
         windeployqt(${PROJECT_NAME})
     endif()
     if(APPLE)
+    message("macdeployqt")
             execute_process(
             COMMAND ${qt_root}/bin/macdeployqt
-            ${CMAKE_INSTALL_PREFIX}/bin/${PROJECT_NAME}.app
+            ${CMAKE_INSTALL_PREFIX}/build/${PROJECT_NAME}.app
             -qmldir=${qt_root}/qml
         )
     endif()
