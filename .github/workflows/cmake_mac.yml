@@ -41,7 +41,7 @@ jobs:
       run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
 
     - name: cpack
-      run: cpack -G ScottPlayer
+      run: cpack -G DRAGANDROP
       
     - name: List files in the repository3
       run: |
