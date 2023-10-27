@@ -44,10 +44,7 @@ jobs:
       
     - name: List files in the repository3
       run: |
-          ls -R ${{ github.workspace }}
-    - name: List files in the repository
-      run: |
-          ls -R ${{ github.workspace }}/build
+          ls -R ${{ github.workspace }}/Qt/5.15.2/clang_64
     - name: List files in the repository2
       run: |
           ls -R ${{ github.workspace }}/build/ScottPlayer.app
