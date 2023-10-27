@@ -126,3 +126,13 @@ if(QT_VERSION_MAJOR EQUAL 6)
         )
     endif()
 endif()
+
+message(STATUS "APPS: ${APPS}")
+message(STATUS "QT_PLUGINS: ${QT_PLUGINS}")
+message(STATUS "DIRS: ${DIRS}")
+
+install(CODE "include(BundleUtilities)
+    fixup_bundle(\"${APPS}\" \"${QT_PLUGINS}\" \"${DIRS}\")")
+
+set(CPACK_GENERATOR "DRAGNDROP")
+include(CPack)
