@@ -127,6 +127,8 @@ if(QT_VERSION_MAJOR EQUAL 6)
     endif()
 endif()
 
+SET(CPACK_PACKAGE_NAME ${PROJECT_NAME})
+
 message(STATUS "APPS: ${APPS}")
 message(STATUS "QT_PLUGINS: ${QT_PLUGINS}")
 message(STATUS "DIRS: ${DIRS}")
