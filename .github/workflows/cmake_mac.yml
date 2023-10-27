@@ -41,10 +41,7 @@ jobs:
       run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
 
 
-      
-    - name: List files in the repository3
-      run: |
-          ls -R ${{ github.workspace }}/Qt/5.15.2/clang_64
+    
     - name: List files in the repository2
       run: |
           ls -R ${{ github.workspace }}/build/ScottPlayer.app
