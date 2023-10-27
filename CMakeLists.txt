@@ -134,5 +134,4 @@ message(STATUS "DIRS: ${DIRS}")
 install(CODE "include(BundleUtilities)
     fixup_bundle(\"${APPS}\" \"${QT_PLUGINS}\" \"${DIRS}\")")
 
-set(CPACK_GENERATOR "ScottPlayer")
 include(CPack)
