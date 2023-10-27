@@ -39,7 +39,17 @@ jobs:
 
     - name: Build
       run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+
+    - name: cpack
+      run: cpack -G DragNDrop
+      
+    - name: List files in the repository3
+      run: |
+          ls -R ${{ github.workspace }}
     - name: List files in the repository
+      run: |
+          ls -R ${{ github.workspace }}/build
+    - name: List files in the repository2
       run: |
           ls -R ${{ github.workspace }}/build/ScottPlayer.app
       
