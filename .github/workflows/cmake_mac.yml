@@ -41,17 +41,29 @@ jobs:
 
     - name: Build
       run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
-    - name: List files in the repository3
-      run: |
-          ls "${Qt5_DIR}"
+      
+    - name: macdeployqt
+      run: macdeployqt ${{ github.workspace }}/build/ScottPlayer.app -dmg -verbose=3
+      
+    - name: Upload macdeployqt
+      uses: actions/upload-artifact@v3
+      with:
+        name: ScottPlayerQTDeploy
+        path: '${{ github.workspace }}/build/ScottPlayer.app'
+        
+    - name: Zip
+      run: zip -r ScottPlayer.zip ${{ github.workspace }}/build/ScottPlayer.app
+
+    - name: Upload Zip
+      uses: actions/upload-artifact@v3
+      with:
+        name: ScottPlayerZip
+        path: '**.zip'
     
     - name: List files in the repository2
       run: |
           ls -R ${{ github.workspace }}/build/ScottPlayer.app
-
-    - name: Zip
-      run: zip -r ScottPlayer.zip ${{ github.workspace }}
-      
+  
     - name: Build DMG
       run: create-dmg ScottPlayer.dmg ./build/ScottPlayer.app
 
@@ -60,12 +72,6 @@ jobs:
       with:
         name: ScottPlayer
         path: '**.dmg'
-
-    - name: Upload Zip
-      uses: actions/upload-artifact@v3
-      with:
-        name: ScottPlayerZip
-        path: '**.zip'
 
     - name: Create prerelease
       if: github.ref == 'refs/heads/main'
