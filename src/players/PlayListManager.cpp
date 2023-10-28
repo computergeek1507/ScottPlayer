@@ -149,7 +149,7 @@ void PlayListManager::AddPlaylistName(QString const& playlist)
 
 void PlayListManager::AddSequence(QString const& fseqPath, QString const& mediaPath, int index)
 {
-	if (index < 0 || index > m_playlists.size())
+	if (index < 0 || index >= m_playlists.size())
 	{
 		return;
 	}
@@ -165,7 +165,7 @@ void PlayListManager::AddSchedule(Schedule schedule)
 
 void PlayListManager::DeleteSchedule(int schedule_index) 
 {
-	if (schedule_index < 0 || schedule_index > m_schedules.size())
+	if (schedule_index < 0 || schedule_index >= m_schedules.size())
 	{
 		return;
 	}
@@ -176,7 +176,7 @@ void PlayListManager::DeleteSchedule(int schedule_index)
 
 void PlayListManager::EditSchedule(int schedule_index, Schedule schedule)
 {
-	if (schedule_index < 0 || schedule_index > m_schedules.size())
+	if (schedule_index < 0 || schedule_index >= m_schedules.size())
 	{
 		return;
 	}
