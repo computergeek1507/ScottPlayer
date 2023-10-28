@@ -45,25 +45,6 @@ jobs:
     - name: macdeployqt
       run: macdeployqt ${{ github.workspace }}/build/ScottPlayer.app -dmg -verbose=3
       
-    - name: Upload macdeployqt
-      uses: actions/upload-artifact@v3
-      with:
-        name: ScottPlayerQTDeploy
-        path: '${{ github.workspace }}/build/ScottPlayer.app'
-        
-    - name: Zip
-      run: zip -r ScottPlayer.zip ${{ github.workspace }}/build/ScottPlayer.app
-
-    - name: Upload Zip
-      uses: actions/upload-artifact@v3
-      with:
-        name: ScottPlayerZip
-        path: '**.zip'
-    
-    - name: List files in the repository2
-      run: |
-          ls -R ${{ github.workspace }}/build/ScottPlayer.app
-  
     - name: Build DMG
       run: create-dmg ScottPlayer.dmg ./build/ScottPlayer.app
 
