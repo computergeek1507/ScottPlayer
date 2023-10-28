@@ -16,10 +16,10 @@ PlayListManager::PlayListManager():
 	m_scheduleTimer->setInterval(2000);
 	m_scheduleTimer->moveToThread(&m_scheduleThread);
 
-	connect(&m_scheduleThread, SIGNAL(started()), m_scheduleTimer.get(), SLOT(start()));
-	connect(m_scheduleTimer.get(), SIGNAL(timeout()), this, SLOT(CheckSchedule()));
-	connect(this, SIGNAL(finished()), m_scheduleTimer.get(), SLOT(stop()));
-	connect(this, SIGNAL(finished()), &m_scheduleThread, SLOT(quit()));
+	connect(&m_scheduleThread, SIGNAL(started()), m_scheduleTimer.get(), SLOT(start()), Qt::QueuedConnection);
+	connect(m_scheduleTimer.get(), SIGNAL(timeout()), this, SLOT(CheckSchedule()), Qt::QueuedConnection);
+	connect(this, SIGNAL(finished()), m_scheduleTimer.get(), SLOT(stop()), Qt::QueuedConnection);
+	connect(this, SIGNAL(finished()), &m_scheduleThread, SLOT(quit()), Qt::QueuedConnection);
 	m_scheduleThread.start();
 }
 
