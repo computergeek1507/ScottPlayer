@@ -11,24 +11,25 @@
 
 PlayListManager::PlayListManager():
 	m_scheduleTimer(std::make_unique<QTimer>(this)),
+	m_scheduleThread(std::make_unique<QThread>(this)),
 		m_logger(spdlog::get("scottplayer"))
 {
-	m_scheduleTimer->setInterval(2000);
-	m_scheduleTimer->moveToThread(&m_scheduleThread);
+	m_scheduleTimer->setInterval(1000);
+	m_scheduleTimer->moveToThread(m_scheduleThread.get());
 
-	connect(&m_scheduleThread, SIGNAL(started()), m_scheduleTimer.get(), SLOT(start()), Qt::QueuedConnection);
-	connect(m_scheduleTimer.get(), SIGNAL(timeout()), this, SLOT(CheckSchedule()), Qt::QueuedConnection);
-	connect(this, SIGNAL(finished()), m_scheduleTimer.get(), SLOT(stop()), Qt::QueuedConnection);
-	connect(this, SIGNAL(finished()), &m_scheduleThread, SLOT(quit()), Qt::QueuedConnection);
-	m_scheduleThread.start();
+	connect(m_scheduleThread.get(), SIGNAL(started()), m_scheduleTimer.get(), SLOT(start()));
+	connect(m_scheduleTimer.get(), SIGNAL(timeout()), this, SLOT(CheckSchedule()));
+	connect(this, SIGNAL(finished()), m_scheduleTimer.get(), SLOT(stop()));
+	connect(this, SIGNAL(finished()), m_scheduleThread.get(), SLOT(quit()));
+	m_scheduleThread->start();
 }
 
 PlayListManager::~PlayListManager()
 {
 	m_scheduleTimer->stop();
-	m_scheduleThread.requestInterruption();
-	m_scheduleThread.quit();
-	m_scheduleThread.wait();
+	m_scheduleThread->requestInterruption();
+	m_scheduleThread->quit();
+	m_scheduleThread->wait();
 }
 
 bool PlayListManager::LoadPlayLists(QString const& configFolder)
@@ -62,7 +63,7 @@ void PlayListManager::PlaySequence(int playlist_index, int sequence_index) const
 		return;
 	}
 
-	PlaySequenceSend(m_playlists.at(playlist_index).PlayListItems.at(sequence_index).SequenceFile,
+	emit PlaySequenceSend(m_playlists.at(playlist_index).PlayListItems.at(sequence_index).SequenceFile,
 		m_playlists.at(playlist_index).PlayListItems.at(sequence_index).MediaFile);
 }
 
@@ -100,6 +101,7 @@ void PlayListManager::MoveSequenceUp(int playlist_index, int sequence_index)
 	emit DisplayPlaylistSend(playlist_index);
 	emit SelectSequenceSend(sequence_index - 1);
 }
+
 void PlayListManager::MoveSequenceDown(int playlist_index, int sequence_index) 
 {
 	if (playlist_index < 0 || playlist_index > m_playlists.size())
@@ -322,7 +324,7 @@ void PlayListManager::CheckSchedule()
 		return; 
 	}
 	auto const& current = QDateTime::currentDateTime();
-
+	MessageSend("Fire: " + current.toString());
 	for (auto const& schedule : m_schedules)
 	{
 		if (!schedule.Enabled)

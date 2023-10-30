@@ -78,7 +78,7 @@ private:
     std::vector<Schedule> m_schedules;
 
     std::unique_ptr<QTimer> m_scheduleTimer{nullptr};
-    QThread m_scheduleThread;
+    std::unique_ptr<QThread> m_scheduleThread;
 
     QString m_currentPlaylist;
     //QString m_currentSequence;
