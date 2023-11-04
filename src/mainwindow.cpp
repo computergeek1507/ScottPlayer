@@ -224,6 +224,11 @@ void MainWindow::on_pb_playSequence_clicked()
 	m_playlists->PlaySequence(m_ui->cb_playlists->currentData().toInt(),m_ui->tw_playlists->currentRow());
 }
 
+void MainWindow::on_pb_stopSequence_clicked()
+{
+	m_player->StopSequence();
+}
+
 void MainWindow::on_pb_addSchedule_clicked()
 {
 	AddSchedule pn(this);
@@ -336,6 +341,7 @@ void MainWindow::RedrawPlaylist(int index)
 		}
 	}
 	m_ui->tw_playlists->resizeColumnsToContents();
+
 }
 
 void MainWindow::RedrawSchedule()

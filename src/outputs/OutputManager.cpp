@@ -3,14 +3,17 @@
 #include "ArtNetOutput.h"
 #include "DDPOutput.h"
 #include "E131Output.h"
+#include "DMXOutput.h"
+#include "OpenDMXOutput.h"
+#include "RenardOutput.h"
+#include "GenericSerialOutput.h"
 
 #include <QtXml>
 #include <QFile>
 
 OutputManager::OutputManager():
-		m_logger(spdlog::get("scottplayer"))
+	m_logger(spdlog::get("scottplayer"))
 {
-
 }
 
 bool OutputManager::OpenOutputs()
@@ -105,6 +108,52 @@ bool OutputManager::LoadOutputs(QString const& outputConfig)
 				artnet->Channels = iChannels;//todo fix
 				artnet->Enabled = active;
 				m_outputs.push_back(std::move(artnet));
+				emit AddController(active, nType, ipAddress, sChannels);
+			}
+			else if ("DMX" == nType)
+			{
+				auto dmx = std::make_unique<DMXOutput>();
+				dmx->IP = ipAddress;
+				dmx->BaudRate = universe.toUInt();
+				dmx->StartChannel = startChannel;
+				dmx->Channels = iChannels;//todo fix
+				dmx->Enabled = active;
+				m_outputs.push_back(std::move(dmx));
+				emit AddController(active, nType, ipAddress, sChannels);
+			}
+			else if ("OpenDMX" == nType)
+			{
+				auto opendmx = std::make_unique<OpenDMXOutput>();
+				opendmx->IP = ipAddress;
+				opendmx->BaudRate = universe.toUInt();
+				opendmx->StartChannel = startChannel;
+				opendmx->Channels = iChannels;//todo fix
+				opendmx->Enabled = active;
+				m_outputs.push_back(std::move(opendmx));
+				emit AddController(active, nType, ipAddress, sChannels);
+			}
+			else if ("Renard" == nType)
+			{
+				auto renard = std::make_unique<RenardOutput>();
+				renard->IP = ipAddress;
+				renard->BaudRate = universe.toUInt();
+				renard->StartChannel = startChannel;
+				renard->Channels = iChannels;//todo fix
+				renard->Enabled = active;
+				m_outputs.push_back(std::move(renard));
+				emit AddController(active, nType, ipAddress, sChannels);
+			}
+			else if ("Generic Serial" == nType)
+			{
+				auto genericSerial = std::make_unique<GenericSerialOutput>();
+				//genericSerial->_prefix = controllerXML.attribute("Prefix");
+				//genericSerial->_postfix = controllerXML.attribute("Postfix");
+				genericSerial->IP = ipAddress;
+				genericSerial->BaudRate = universe.toUInt();
+				genericSerial->StartChannel = startChannel;
+				genericSerial->Channels = iChannels;//todo fix
+				genericSerial->Enabled = active;
+				m_outputs.push_back(std::move(genericSerial));
 				emit AddController(active, nType, ipAddress, sChannels);
 			}
 			else

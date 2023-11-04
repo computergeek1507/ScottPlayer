@@ -153,6 +153,17 @@
            </widget>
           </item>
           <item>
+           <widget class="QPushButton" name="pb_stopSequence">
+            <property name="text">
+             <string>Stop Sequence</string>
+            </property>
+            <property name="icon">
+             <iconset resource="ScottPlayer.qrc">
+              <normaloff>:/ScottPlayer/icons/control_stop_blue.png</normaloff>:/ScottPlayer/icons/control_stop_blue.png</iconset>
+            </property>
+           </widget>
+          </item>
+          <item>
            <spacer name="horizontalSpacer">
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
@@ -335,7 +346,7 @@
      <x>0</x>
      <y>0</y>
      <width>1046</width>
-     <height>22</height>
+     <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">

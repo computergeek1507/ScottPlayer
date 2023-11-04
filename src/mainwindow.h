@@ -49,6 +49,7 @@ public Q_SLOTS:
     void on_pb_moveUp_clicked();
     void on_pb_moveDown_clicked();
     void on_pb_playSequence_clicked();
+    void on_pb_stopSequence_clicked();
 
     void on_pb_addSchedule_clicked();
     void on_pb_editSchedule_clicked();
