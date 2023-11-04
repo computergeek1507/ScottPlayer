@@ -24,7 +24,7 @@ void OpenDMXOutput::OutputFrame(uint8_t* data)
 {
     if (!Enabled || m_SerialPort == nullptr || m_SerialPort->isOpen()) return;
 
-    size_t chs = std::min(Channels, (size_t)(OPENDMX_MAX_CHANNELS));
+    size_t chs = std::min((size_t)Channels, (size_t)(OPENDMX_MAX_CHANNELS));
     if (memcmp(&_data[0], &data[StartChannel - 1], chs) != 0) {
         memcpy(&_data[0], &data[StartChannel - 1], chs);
     }
