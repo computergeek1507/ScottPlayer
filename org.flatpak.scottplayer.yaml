@@ -1,0 +1,21 @@
+# Flatpak Manifest example
+---
+app-id: org.flatpak.scottplayer
+runtime: org.kde.Platform
+runtime-version: "5.15-21.08"
+sdk: org.kde.Sdk
+command: scottplayer
+finish-args:
+  - --share=ipc
+  - --device=dri
+  - --socket=fallback-x11
+  - --socket=wayland
+  - --filesystem=host
+modules:
+  - name: scottplayer
+    buildsystem: cmake-ninja
+    config-opts:
+      - -DCMAKE_BUILD_TYPE=RelWithDebInfo
+    sources:
+      - type: dir
+        path: .
