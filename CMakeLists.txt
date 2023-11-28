@@ -104,6 +104,18 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 
 target_sources(${PROJECT_NAME} PRIVATE res/resource.rc)
 
+if(APPLE)
+   # NOTE: Don't include the path in MACOSX_BUNDLE_ICON_FILE -- this is
+   # the property added to Info.plist
+   set(MACOSX_BUNDLE_ICON_FILE ScottPlayer)
+
+   # And this part tells CMake where to find and install the file itself
+   set(myApp_ICON ${CMAKE_CURRENT_SOURCE_DIR}/res/ScottPlayer.icns)
+   set_source_files_properties(${myApp_ICON} PROPERTIES
+       MACOSX_PACKAGE_LOCATION "Resources")
+   target_sources(${PROJECT_NAME} PRIVATE ${myApp_ICON})
+endif()
+
 if(WIN32)
   set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ${PROJECT_NAME})
 endif()
