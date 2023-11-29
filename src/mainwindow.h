@@ -79,6 +79,9 @@ public Q_SLOTS:
 private:
     QString FormatTime(int ticksMS) const;
     QString GetFileName(QString const& path) const;
+    void RefreshAddPlaylistButtons();
+    void RefreshPlaylistButtons(int count);
+    void RefreshScheduleButtons();
 
     Ui::MainWindow *m_ui;
     std::shared_ptr<spdlog::logger> m_logger{ nullptr };

@@ -97,6 +97,11 @@ MainWindow::MainWindow(QWidget* parent)
 		m_showfolder = lastfolder;
 		RedrawSchedule();
 	}
+	else 
+	{
+		RefreshAddPlaylistButtons();
+		RefreshPlaylistButtons(0);
+	}
 
 	bool enabled = m_settings->value("multisync", "true").toBool();
 	m_player->SetMultisync(enabled);
@@ -184,6 +189,7 @@ void MainWindow::on_pb_deletePlaylist_clicked()
 {
 	m_playlists->DeletePlayList(m_ui->cb_playlists->currentData().toInt());
 	m_ui->cb_playlists->removeItem(m_ui->cb_playlists->currentIndex());
+	RefreshAddPlaylistButtons();
 }
 
 void MainWindow::on_pb_addSequence_clicked()
@@ -339,9 +345,10 @@ void MainWindow::RedrawPlaylist(int index)
 			SetItem(row, PlaylistColumn::MediaFile, GetFileName(item.MediaFile));
 			++row;
 		}
+		RefreshPlaylistButtons(static_cast<int>(playlist.PlayListItems.size()));
 	}
 	m_ui->tw_playlists->resizeColumnsToContents();
-
+	RefreshScheduleButtons();
 }
 
 void MainWindow::RedrawSchedule()
@@ -370,6 +377,7 @@ void MainWindow::RedrawSchedule()
 		}
 	
 	m_ui->tw_schedules->resizeColumnsToContents();
+	RefreshScheduleButtons();
 }
 
 void MainWindow::ClearListData()
@@ -383,6 +391,7 @@ void MainWindow::ClearListData()
 void MainWindow::AddPlaylist(QString const& Playlist, int index)
 {
 	m_ui->cb_playlists->addItem(Playlist, index);
+	RefreshAddPlaylistButtons();
 }
 
 void MainWindow::UpdateStatus(QString const& message)
@@ -410,4 +419,68 @@ QString MainWindow::GetFileName(QString const& path) const
 {
 	if(path.isEmpty()) return QString();
 	return QFileInfo( path ).fileName();
+}
+
+void MainWindow::RefreshAddPlaylistButtons()
+{
+	if (m_playlists->HasPlaylists())
+	{
+		m_ui->pb_addSequence->setEnabled(true);
+		m_ui->pb_deletePlaylist->setEnabled(true);
+		m_ui->cb_playlists->setEnabled(true);
+		m_ui->tabSchedules->setEnabled(true);
+
+		m_ui->tw_playlists->setEnabled(true);
+	}
+	else
+	{
+		m_ui->pb_addSequence->setDisabled(true);
+		m_ui->pb_deletePlaylist->setDisabled(true);
+		m_ui->cb_playlists->setDisabled(true);
+		m_ui->tabSchedules->setDisabled(true);
+
+		m_ui->tw_playlists->clearContents();
+		m_ui->tw_playlists->setDisabled(true);
+	}
+}
+
+void MainWindow::RefreshPlaylistButtons(int count)
+{
+	if (count != 0)
+	{
+		m_ui->pb_removeSequence->setEnabled(true);
+		m_ui->pb_moveUp->setEnabled(true);
+		m_ui->pb_moveDown->setEnabled(true);
+		m_ui->pb_playSequence->setEnabled(true);
+	}
+	else
+	{
+		m_ui->pb_removeSequence->setDisabled(true);
+		m_ui->pb_moveUp->setDisabled(true);
+		m_ui->pb_moveDown->setDisabled(true);
+		m_ui->pb_playSequence->setDisabled(true);
+	}
+}
+
+void MainWindow::RefreshScheduleButtons()
+{
+	if (m_playlists->HasSchedules())
+	{
+		m_ui->pb_editSchedule->setEnabled(true);
+		m_ui->pb_deleteSchedule->setEnabled(true);
+		m_ui->pb_sch_moveUp->setEnabled(true);
+		m_ui->pb_sch_moveDown->setEnabled(true);
+
+		m_ui->tw_schedules->setEnabled(true);
+	}
+	else
+	{
+		m_ui->pb_editSchedule->setDisabled(true);
+		m_ui->pb_deleteSchedule->setDisabled(true);
+		m_ui->pb_sch_moveUp->setDisabled(true);
+		m_ui->pb_sch_moveDown->setDisabled(true);
+
+		m_ui->tw_schedules->clearContents();
+		m_ui->tw_schedules->setDisabled(true);
+	}
 }

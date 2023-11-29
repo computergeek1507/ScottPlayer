@@ -32,6 +32,8 @@ public:
     [[nodiscard]] std::optional<std::reference_wrapper<PlayList const>> GetPlayList(QString const& name) const;
     [[nodiscard]] QStringList GetPlayLists() const;
     [[nodiscard]] std::vector<Schedule> const& GetSchedules() const { return m_schedules; };
+    [[nodiscard]] bool HasPlaylists() const { return !m_playlists.empty(); };
+    [[nodiscard]] bool HasSchedules() const { return !m_schedules.empty(); };
 
 public Q_SLOTS:
     void UpdateStatus(QString const& sequencePath, PlaybackStatus status);

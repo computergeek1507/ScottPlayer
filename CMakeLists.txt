@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.20.4)
 
-project(ScottPlayer VERSION 0.0.3 LANGUAGES CXX)
+project(ScottPlayer VERSION 0.0.4 LANGUAGES CXX)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
