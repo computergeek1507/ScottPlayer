@@ -3,10 +3,6 @@
 
 #include "SerialOutput.h"
 
-#include <QString>
-
-#include <memory>
-
 #define DMX_MAX_CHANNELS 4800
 
 struct DMXOutput : SerialOutput

@@ -3,10 +3,6 @@
 
 #include "SerialOutput.h"
 
-#include <QString>
-
-#include <memory>
-
 #define GENERICSERIAL_MAX_CHANNELS 8192
 #define MAX_PREFIX_POSTFIX 256
 

@@ -3,10 +3,6 @@
 
 #include "SerialOutput.h"
 
-#include <QString>
-
-#include <memory>
-
 #define RENARD_MAX_CHANNELS 1015
 
 struct RenardOutput : SerialOutput

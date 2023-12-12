@@ -114,7 +114,7 @@ void PlayListManager::MoveSequenceDown(int playlist_index, int sequence_index)
 		return;
 	}
 
-	std::swap(m_playlists.at(playlist_index).PlayListItems.at( sequence_index),
+	std::swap(m_playlists.at(playlist_index).PlayListItems.at(sequence_index),
 		m_playlists.at(playlist_index).PlayListItems.at(sequence_index + 1));
 	
 	emit DisplayPlaylistSend(playlist_index);

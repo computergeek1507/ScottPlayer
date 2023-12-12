@@ -3,10 +3,6 @@
 
 #include "SerialOutput.h"
 
-#include <QString>
-
-#include <memory>
-
 #define OPENDMX_MAX_CHANNELS 512
 
 struct OpenDMXOutput : SerialOutput
