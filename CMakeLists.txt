@@ -166,7 +166,7 @@ if(LINUX)
         
             install(PROGRAMS org.flatpak.scottplayer.desktop  DESTINATION ${KDE_INSTALL_APPDIR})
             install(FILES org.flatpak.scottplayer.appdata.xml DESTINATION ${KDE_INSTALL_METAINFODIR})
-            install(FILES res/ScottPlayer.svg DESTINATION ${KDE_INSTALL_FULL_ICONDIR}/hicolor/scalable/apps)
+            install(FILES res/org.flatpak.scottplayer.svg DESTINATION ${KDE_INSTALL_FULL_ICONDIR}/hicolor/scalable/apps)
         endif()
 endif()
 
