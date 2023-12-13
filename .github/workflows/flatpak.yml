@@ -15,5 +15,5 @@ jobs:
     - uses: flatpak/flatpak-github-actions/flatpak-builder@v6
       with:
         bundle: scottplayer.flatpak
-        manifest-path: org.flatpak.scottplayer
+        manifest-path: org.flatpak.scottplayer.yaml
         cache-key: flatpak-builder-${{ github.sha }}
