@@ -139,13 +139,20 @@ if(QT_VERSION_MAJOR EQUAL 6)
     endif()
 endif()
 
-SET(CPACK_PACKAGE_NAME ${PROJECT_NAME})
+if(APPLE)
+    message(STATUS "APPS: ${APPS}")
+    message(STATUS "QT_PLUGINS: ${QT_PLUGINS}")
+    message(STATUS "DIRS: ${DIRS}")
 
-message(STATUS "APPS: ${APPS}")
-message(STATUS "QT_PLUGINS: ${QT_PLUGINS}")
-message(STATUS "DIRS: ${DIRS}")
+    install(CODE "include(BundleUtilities)
+    fixup_bundle(\"${APPS}\" \"${QT_PLUGINS}\" \"${DIRS}\")
+endif()
 
-install(CODE "include(BundleUtilities)
-    fixup_bundle(\"${APPS}\" \"${QT_PLUGINS}\" \"${DIRS}\")")
+if(LINUX)
+    message(STATUS "APPS: ${APPS}")
+    message(STATUS "QT_PLUGINS: ${QT_PLUGINS}")
+    message(STATUS "DIRS: ${DIRS}")
 
-include(CPack)
+    install(TARGETS ${PROJECT_NAME} DESTINATION bin)
+endif()
+
