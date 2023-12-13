@@ -4,6 +4,11 @@ project(ScottPlayer VERSION 0.0.4 LANGUAGES CXX)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
+if(LINUX)
+        find_package(ECM 5.86.0 REQUIRED NO_MODULE)
+        set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${ECM_MODULE_PATH} ${ECM_KDE_MODULE_DIR})
+endif()
+
 # Set path to our custom CMAKE scripts
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${PROJECT_SOURCE_DIR}/cmake")
 
@@ -155,8 +160,13 @@ if(LINUX)
 
     install(TARGETS ${PROJECT_NAME} DESTINATION bin)
     #install(TARGETS ${PROJECT_NAME} ${INSTALL_TARGETS_DEFAULT_ARGS})
-    install(PROGRAMS org.flatpak.scottplayer.desktop  DESTINATION ${KDE_INSTALL_APPDIR})
-    install(FILES org.flatpak.scottplayer.appdata.xml DESTINATION ${KDE_INSTALL_METAINFODIR})
-    install(FILES res/ScottPlayer.svg DESTINATION ${KDE_INSTALL_FULL_ICONDIR}/hicolor/scalable/apps)
+
+        if(ECM_FOUND)
+                include(KDEInstallDirs)
+        
+            install(PROGRAMS org.flatpak.scottplayer.desktop  DESTINATION ${KDE_INSTALL_APPDIR})
+            install(FILES org.flatpak.scottplayer.appdata.xml DESTINATION ${KDE_INSTALL_METAINFODIR})
+            install(FILES res/ScottPlayer.svg DESTINATION ${KDE_INSTALL_FULL_ICONDIR}/hicolor/scalable/apps)
+        endif()
 endif()
 
