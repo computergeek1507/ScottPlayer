@@ -154,5 +154,9 @@ if(LINUX)
     message(STATUS "DIRS: ${DIRS}")
 
     install(TARGETS ${PROJECT_NAME} DESTINATION bin)
+    #install(TARGETS ${PROJECT_NAME} ${INSTALL_TARGETS_DEFAULT_ARGS})
+    install(PROGRAMS org.flatpak.scottplayer.desktop  DESTINATION ${KDE_INSTALL_APPDIR})
+    install(FILES org.flatpak.scottplayer.appdata.xml DESTINATION ${KDE_INSTALL_METAINFODIR})
+    install(FILES res/ScottPlayer.svg DESTINATION ${KDE_INSTALL_FULL_ICONDIR}/hicolor/scalable/apps)
 endif()
 

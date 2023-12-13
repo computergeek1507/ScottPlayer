@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=ScottPlayer
+GenericName=ScottPlayer
+Comment=ScottPlayer is a FSEQ Playback application that works with xLights.
+Exec=ScottPlayer
+Terminal=false
+Icon=ScottPlayer
+Type=Application
+Categories=Qt;KDE;AudioVideo

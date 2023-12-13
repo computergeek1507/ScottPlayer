@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop">
+  <id>org.flatpak.scottplayer.desktop</id>
+  <name>ScottPlayer</name>
+  <summary>Player of Lights</summary>
+  <developer_name>computergeek1507</developer_name>
+  <description>
+  <p>
+    ScottPlayer is a FSEQ Playback application that works with xLights.
+  </p>
+  </description>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>MIT</project_license>
+  <url type="homepage">https://github.com/computergeek1507/ScottPlayer</url>
+</component>
