@@ -90,25 +90,6 @@ void PlayListManager::MoveSequenceUp(int playlist_index, int sequence_index)
 		return;
 	}
 
-	if (sequence_index <= 0 || sequence_index > m_playlists.at(playlist_index).PlayListItems.size())
-	{
-		return;
-	}
-
-	std::swap(m_playlists.at(playlist_index).PlayListItems.at(sequence_index),
-		m_playlists.at(playlist_index).PlayListItems.at(sequence_index - 1));
-
-	emit DisplayPlaylistSend(playlist_index);
-	emit SelectSequenceSend(sequence_index - 1);
-}
-
-void PlayListManager::MoveSequenceDown(int playlist_index, int sequence_index) 
-{
-	if (playlist_index < 0 || playlist_index > m_playlists.size())
-	{
-		return;
-	}
-
 	if (sequence_index < 0 || sequence_index + 1 >= m_playlists.at(playlist_index).PlayListItems.size())
 	{
 		return;
@@ -119,6 +100,25 @@ void PlayListManager::MoveSequenceDown(int playlist_index, int sequence_index)
 	
 	emit DisplayPlaylistSend(playlist_index);
 	emit SelectSequenceSend(sequence_index + 1);
+}
+
+void PlayListManager::MoveSequenceDown(int playlist_index, int sequence_index)
+{
+	if (playlist_index < 0 || playlist_index > m_playlists.size())
+	{
+		return;
+	}
+
+	if (sequence_index <= 0 || sequence_index > m_playlists.at(playlist_index).PlayListItems.size())
+	{
+		return;
+	}
+
+	std::swap(m_playlists.at(playlist_index).PlayListItems.at(sequence_index),
+		m_playlists.at(playlist_index).PlayListItems.at(sequence_index - 1));
+
+	emit DisplayPlaylistSend(playlist_index);
+	emit SelectSequenceSend(sequence_index - 1);
 }
 
 void PlayListManager::DeletePlayList(int playlist_index)
