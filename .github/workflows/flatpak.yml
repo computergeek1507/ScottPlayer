@@ -5,6 +5,7 @@ on:
       - '.github/workflows/*.yml'
       - '*.md'
   pull_request:
+  workflow_dispatch:
 name: Flatpak
 jobs:
   flatpak:
