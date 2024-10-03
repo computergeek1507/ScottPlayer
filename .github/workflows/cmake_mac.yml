@@ -20,7 +20,7 @@ jobs:
     runs-on: macos-latest   
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     
     - name: Install create-dmg
       run: brew install create-dmg
@@ -49,7 +49,7 @@ jobs:
       run: create-dmg ScottPlayer.dmg ./build/ScottPlayer.app
 
     - name: Upload Installer
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: ScottPlayer
         path: '**.dmg'
