@@ -29,7 +29,7 @@ void DMXOutput::Close()
 
 void DMXOutput::OutputFrame(uint8_t* data)
 {
-    if (!Enabled || m_SerialPort == nullptr || m_SerialPort->isOpen()) return;
+    if (!Enabled || m_SerialPort == nullptr || !m_SerialPort->isOpen()) return;
 
     size_t chs = std::min((size_t)Channels, (size_t)(DMX_MAX_CHANNELS));
 

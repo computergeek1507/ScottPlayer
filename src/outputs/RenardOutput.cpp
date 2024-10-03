@@ -26,7 +26,7 @@ void RenardOutput::Close()
 
 void RenardOutput::OutputFrame(uint8_t* data)
 {
-    if (!Enabled || m_SerialPort == nullptr || m_SerialPort->isOpen()) return;
+    if (!Enabled || m_SerialPort == nullptr || !m_SerialPort->isOpen()) return;
     for (int i = 0; i < Channels; i++)
     {
         SetOneChannel(i + 2, data[(StartChannel - 1) + i]);
