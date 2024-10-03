@@ -2,7 +2,7 @@
 
 #### WIP
 Barebones FSEQ Sequence Player and Scheduler. 
-Only Supports Artnet, E131, and DDP Outputs. Supports v2 ZSTD, v2 Uncompressed, and v1 FSEQs, not v2 zlib 
+Supports Artnet, E131, DDP, Serial DMX, openDMX, Renard Outputs. Supports v2 ZSTD, v2 Uncompressed, and v1 FSEQs, not v2 zlib 
 
 #### TODO
  - Fix Schedules that loop around midnight
