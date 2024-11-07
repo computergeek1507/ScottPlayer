@@ -5,6 +5,10 @@
 
 SequencePlayer::SequencePlayer():
 	m_mediaPlayer(std::make_unique<QMediaPlayer>()),
+#if (QT_VERSION >= QT_VERSION_CHECK(6,0,0))
+	m_audioOutput(std::make_unique<QAudioOutput>()),
+#endif
+
 	//m_playbackThread(std::make_unique<QThread>(this)),
 	m_playbackTimer(std::make_unique<QTimer>(this)),
 	m_logger(spdlog::get("scottplayer"))
@@ -29,10 +33,16 @@ SequencePlayer::SequencePlayer():
 
 	//m_mediaPlayer = std::make_unique<QMediaPlayer>();
 	connect(m_mediaPlayer.get(), &QMediaPlayer::positionChanged, this, &SequencePlayer::TriggerTimedOutputData);
-	m_mediaPlayer->setVolume(100);
-
 	connect(m_mediaPlayer.get(), &QMediaPlayer::mediaStatusChanged,	this, &SequencePlayer::MediaStatusChanged);
-	connect(m_mediaPlayer.get(), &QMediaPlayer::stateChanged,	this, &SequencePlayer::MediaStateChanged);
+	
+#if (QT_VERSION >= QT_VERSION_CHECK(6,0,0))
+	m_audioOutput->setVolume(1.0);
+	m_mediaPlayer->setAudioOutput(m_audioOutput.get());
+	connect(m_mediaPlayer.get(), &QMediaPlayer::playbackStateChanged, this, &SequencePlayer::MediaPlaybackStateChanged);
+#else
+	m_mediaPlayer->setVolume(100);
+	connect(m_mediaPlayer.get(), &QMediaPlayer::stateChanged, this, &SequencePlayer::MediaStateChanged);
+#endif
 
 	m_syncManager = std::make_unique<SyncManager>(this);
 }
@@ -142,8 +152,11 @@ void SequencePlayer::StopSequence()
 	m_playbackThread.quit();
 	m_playbackThread.wait();
 
-
-	if(m_mediaPlayer->state() == QMediaPlayer::PlayingState)
+#if (QT_VERSION >= QT_VERSION_CHECK(6,0,0))
+	if (m_mediaPlayer->playbackState() == QMediaPlayer::PlayingState)
+#else
+	if (m_mediaPlayer->state() == QMediaPlayer::PlayingState)
+#endif
 	{
 		m_mediaPlayer->stop();
 	}
@@ -159,6 +172,13 @@ void SequencePlayer::StopSequence()
 
 void SequencePlayer::TriggerOutputData()
 {
+#if (QT_VERSION >= QT_VERSION_CHECK(6,0,0))
+	if (SeqType::Music == m_seqType) {
+		TriggerTimedOutputData(m_mediaPlayer->position());
+		return;
+	}
+#endif
+
 	//int64_t timeMS = m_lastFrameRead * m_seqStepTime;
 
 	//qDebug() << "O:" << timeMS << "ms";
@@ -182,7 +202,11 @@ void SequencePlayer::TriggerOutputData()
 
 void SequencePlayer::TriggerTimedOutputData(qint64 timeMS)
 {
-	if(m_mediaPlayer->state() != QMediaPlayer::PlayingState)
+#if (QT_VERSION >= QT_VERSION_CHECK(6,0,0))
+	if (m_mediaPlayer->playbackState() != QMediaPlayer::PlayingState)
+#else
+	if (m_mediaPlayer->state() != QMediaPlayer::PlayingState)
+#endif	
 	{
 		return;
 	}
@@ -276,8 +300,14 @@ void SequencePlayer::StartMusicSeq()
 		emit UpdatePlaybackStatus("", PlaybackStatus::Stopped);
 		return;
 	}
+	
+#if (QT_VERSION >= QT_VERSION_CHECK(6,0,0))
+	//m_mediaPlayer->updateClock(200);
+	m_mediaPlayer->setSource(QUrl::fromLocalFile(m_mediaFile));
+#else
 	m_mediaPlayer->setNotifyInterval(m_seqStepTime);
 	m_mediaPlayer->setMedia(QUrl::fromLocalFile(m_mediaFile));
+#endif
 	//auto test = m_mediaPlayer->mediaStatus();
 	int count{100};
 	while (m_mediaPlayer->mediaStatus() == QMediaPlayer::LoadingMedia && count > 0)
@@ -300,6 +330,11 @@ void SequencePlayer::StartMusicSeq()
 	//m_mediaPlayer->setNotifyInterval(m_seqStepTime);
 	emit UpdateStatus("Playing " + m_seqFileName);
 	emit UpdatePlaybackStatus(m_seqFileName, PlaybackStatus::Playing);
+
+#if (QT_VERSION >= QT_VERSION_CHECK(6,0,0))
+	m_playbackTimer->setInterval(m_seqStepTime/2);
+	m_playbackThread.start();
+#endif
 	m_mediaPlayer->play();
 }
 
@@ -322,10 +357,17 @@ void SequencePlayer::MediaStatusChanged(QMediaPlayer::MediaStatus status)
 
 }
 
+#if (QT_VERSION >= QT_VERSION_CHECK(6,0,0))
+void SequencePlayer::MediaPlaybackStateChanged(QMediaPlayer::PlaybackState state)
+{
+
+}
+#else
 void SequencePlayer::MediaStateChanged(QMediaPlayer::State state)
 {
 
 }
+#endif
 
 void SequencePlayer::SetMultisync(bool enabled)
 {

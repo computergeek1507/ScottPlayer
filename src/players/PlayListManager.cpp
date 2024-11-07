@@ -324,7 +324,7 @@ void PlayListManager::CheckSchedule()
 		return; 
 	}
 	auto const& current = QDateTime::currentDateTime();
-	MessageSend("Fire: " + current.toString());
+	//MessageSend("Fire: " + current.toString());
 	for (auto const& schedule : m_schedules)
 	{
 		if (!schedule.Enabled)
@@ -339,7 +339,11 @@ void PlayListManager::CheckSchedule()
 		{
 			continue;
 		}
-		if (!schedule.Days.contains(QDate::shortDayName(current.date().dayOfWeek()))) 
+#if (QT_VERSION >= QT_VERSION_CHECK(6,0,0))
+		if (!schedule.Days.contains(QLocale().dayName(current.date().dayOfWeek(), QLocale::ShortFormat)))
+#else
+		if (!schedule.Days.contains(QDate::shortDayName(current.date().dayOfWeek())))
+#endif
 		{
 			continue;
 		}

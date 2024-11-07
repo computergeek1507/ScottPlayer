@@ -90,17 +90,15 @@ MainWindow::MainWindow(QWidget* parent)
 
 	auto lastfolder{ m_settings->value("last_folder").toString() };
 
+	RefreshAddPlaylistButtons();
+	RefreshPlaylistButtons(0);
+
 	if (QDir(lastfolder).exists())
 	{
 		m_player->LoadConfigs(lastfolder);
 		m_playlists->LoadPlayLists(lastfolder);
 		m_showfolder = lastfolder;
 		RedrawSchedule();
-	}
-	else 
-	{
-		RefreshAddPlaylistButtons();
-		RefreshPlaylistButtons(0);
 	}
 
 	bool enabled = m_settings->value("multisync", "true").toBool();

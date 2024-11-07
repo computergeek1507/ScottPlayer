@@ -4,6 +4,10 @@
 
 #include <QDate>
 
+#if (QT_VERSION >= QT_VERSION_CHECK(6,0,0))
+#include <QLocale>
+#endif
+
 AddSchedule::AddSchedule(QWidget* parent):
 	ui(new Ui::AddScheduleDialog),
 	m_daysCheckBox(new QxtCheckComboBox())
@@ -12,7 +16,11 @@ AddSchedule::AddSchedule(QWidget* parent):
 	
 	for (int i = 0; i < Qt::DayOfWeek::Sunday; ++i)
 	{
+#if (QT_VERSION >= QT_VERSION_CHECK(6,0,0))
+		QString weekDay = QLocale().dayName(i + 1, QLocale::ShortFormat);
+#else
 		QString weekDay = QDate::shortDayName(i + 1);
+#endif
 		m_daysCheckBox->addItem(weekDay);
 		m_daysCheckBox->setItemCheckState(i, Qt::Checked);
 		m_days.append(weekDay);
@@ -20,7 +28,7 @@ AddSchedule::AddSchedule(QWidget* parent):
 
 	m_daysCheckBox->setSizeAdjustPolicy(QComboBox::AdjustToContentsOnFirstShow);
 	m_daysCheckBox->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Fixed);
-	((QHBoxLayout*)ui->horizontalLayout)->addWidget(m_daysCheckBox, 0, 0);
+	((QHBoxLayout*)ui->horizontalLayout)->addWidget(m_daysCheckBox, 0);
 
 	connect(m_daysCheckBox, &QxtCheckComboBox::checkedItemsChanged, this, &AddSchedule::ChangeDays);
 }

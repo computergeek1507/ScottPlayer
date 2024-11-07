@@ -15,6 +15,9 @@
 #include <QThread>
 
 #include <QMediaPlayer>
+#if (QT_VERSION >= QT_VERSION_CHECK(6,0,0))
+#include <QAudioOutput>
+#endif
 
 #include <memory>
 #include <chrono>
@@ -59,7 +62,13 @@ public Q_SLOTS:
         channelsCount = channels;
     }
     void MediaStatusChanged(QMediaPlayer::MediaStatus status);
+
+#if (QT_VERSION >= QT_VERSION_CHECK(6,0,0))
+    void MediaPlaybackStateChanged(QMediaPlayer::PlaybackState state);
+#else
     void MediaStateChanged(QMediaPlayer::State state);
+#endif
+
     void TriggerOutputData();
     void TriggerTimedOutputData(qint64 timeMS);
 
@@ -105,7 +114,9 @@ private:
     FSEQFile::FrameData* m_lastFrameData{nullptr};
 
     std::unique_ptr<QMediaPlayer> m_mediaPlayer{nullptr};
-
+#if (QT_VERSION >= QT_VERSION_CHECK(6,0,0))
+    std::unique_ptr<QAudioOutput> m_audioOutput{ nullptr };
+#endif
     std::unique_ptr<OutputManager> m_outputManager{nullptr};
 
     std::unique_ptr<SyncManager> m_syncManager{nullptr};
